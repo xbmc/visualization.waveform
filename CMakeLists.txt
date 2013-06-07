@@ -1,0 +1,35 @@
+PROJECT(visualization.spectrum)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
+
+OPTION(BUILD_DX "Build DirectX version?" OFF)
+
+# Locate XBMC bindings
+FIND_PATH(XBMC_INCLUDE_DIR xbmc/xbmc_addon_dll.h)
+
+IF(BUILD_DX)
+  INCLUDE_DIRECTORIES(${XBMC_INCLUDE_DIR})
+ELSE(BUILD_DX)
+  FIND_PACKAGE(OpenGL REQUIRED)
+  FIND_PACKAGE(GLEW REQUIRED)
+  ADD_DEFINITIONS(-DHAS_SDL_OPENGL)
+  INCLUDE_DIRECTORIES(${OpenGL_INCLUDE_DIR}
+                      ${GLEW_INCLUDE_DIR}
+                      ${XBMC_INCLUDE_DIR})
+ENDIF(BUILD_DX)
+
+SET(SOURCES src/Main.cpp)
+
+ADD_LIBRARY(waveform ${SOURCES})
+IF(NOT BUILD_DX)
+  TARGET_LINK_LIBRARIES(waveform ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+ENDIF(NOT BUILD_DX)
+SET_TARGET_PROPERTIES(waveform PROPERTIES VERSION 1.0.0
+                                          SOVERSION 13.0
+                                          PREFIX "")
+
+INSTALL(TARGETS waveform DESTINATION lib/xbmc/addons/visualization.waveform)
+FILE(GLOB ADDON_DATA addon/*)
+INSTALL(FILES ${ADDON_DATA} DESTINATION share/xbmc/addons/visualization.waveform)

@@ -1,5 +1,5 @@
 /*
- *      Copyright (C) 2008-2010 Team XBMC
+ *      Copyright (C) 2008-2013 Team XBMC
  *      http://www.xbmc.org
  *
  *  This Program is free software; you can redistribute it and/or modify
@@ -13,20 +13,17 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with XBMC; see the file COPYING.  If not, write to
- *  the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
- *  http://www.gnu.org/copyleft/gpl.html
+ *  along with XBMC; see the file COPYING.  If not, see
+ *  <http://www.gnu.org/licenses/>.
  *
  */
 
 // Waveform.vis
 // A simple visualisation example by MrC
 
-#include "config.h"
-
-#include "xbmc_vis_dll.h"
+#include <xbmc/xbmc_vis_dll.h>
 #include <stdio.h>
-#if HAVE_LIBGL 
+#ifdef HAS_SDL_OPENGL
 #include <GL/glew.h>
 #else
 #ifdef _WIN32
@@ -35,14 +32,14 @@
 #endif
 
 char g_visName[512];
-#ifndef HAVE_LIBGL
+#ifndef HAS_SDL_OPENGL
 LPDIRECT3DDEVICE9 g_device;
 #else
 void* g_device;
 #endif
 float g_fWaveform[2][512];
 
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
 typedef struct {
   int X;
   int Y;
@@ -62,21 +59,21 @@ struct Vertex_t
   D3DCOLOR  col;
 };
 
-#ifndef HAVE_LIBGL
+#ifndef HAS_SDL_OPENGL
 #define VERTEX_FORMAT     (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 #endif
 
 //-- Create -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-ADDON_STATUS Create(void* hdl, void* props)
+ADDON_STATUS ADDON_Create(void* hdl, void* props)
 {
   if (!props)
-    return STATUS_UNKNOWN;
+    return ADDON_STATUS_UNKNOWN;
 
   VIS_PROPS* visProps = (VIS_PROPS*)props;
 
-#ifndef HAVE_LIBGL
+#ifndef HAS_SDL_OPENGL  
   g_device = (LPDIRECT3DDEVICE9)visProps->device;
 #else
   g_device = visProps->device;
@@ -88,7 +85,7 @@ ADDON_STATUS Create(void* hdl, void* props)
   g_viewport.MinZ = 0;
   g_viewport.MaxZ = 1;
 
-  return STATUS_OK;
+  return ADDON_STATUS_OK;
 }
 
 //-- Start --------------------------------------------------------------------
@@ -102,16 +99,15 @@ extern "C" void Start(int iChannels, int iSamplesPerSec, int iBitsPerSample, con
 //-- Audiodata ----------------------------------------------------------------
 // Called by XBMC to pass new audio data to the vis
 //-----------------------------------------------------------------------------
-extern "C" void AudioData(const short* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
+extern "C" void AudioData(const float* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
 {
-  // Convert the audio data into a floating -1 to +1 range
   int ipos=0;
   while (ipos < 512)
   {
     for (int i=0; i < iAudioDataLength; i+=2)
     {
-      g_fWaveform[0][ipos] = pAudioData[i] / 32768.0f;    // left channel
-      g_fWaveform[1][ipos] = pAudioData[i+1] / 32768.0f;  // right channel
+      g_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
+      g_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
       ipos++;
       if (ipos >= 512) break;
     }
@@ -126,13 +122,13 @@ extern "C" void Render()
 {
   Vertex_t  verts[512];
 
-#ifndef HAVE_LIBGL
+#ifndef HAS_SDL_OPENGL
   g_device->SetFVF(VERTEX_FORMAT);
   g_device->SetPixelShader(NULL);
 #endif
 
   // Left channel
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
   GLenum errcode;
   glColor3f(1.0, 1.0, 1.0);
   glDisable(GL_BLEND);
@@ -147,22 +143,22 @@ extern "C" void Render()
     verts[i].y = g_viewport.Y + g_viewport.Height * 0.33f + (g_fWaveform[0][i] * g_viewport.Height * 0.15f);
     verts[i].z = 1.0;
     verts[i].w = 1;    
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
     glVertex2f(verts[i].x, verts[i].y);
 #endif
   }
 
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
   glEnd();
   if ((errcode=glGetError())!=GL_NO_ERROR) {
     printf("Houston, we have a GL problem: %s\n", gluErrorString(errcode));
   }
-#elif !defined(HAVE_LIBGL)
+#elif !defined(HAS_SDL_OPENGL)
   g_device->DrawPrimitiveUP(D3DPT_LINESTRIP, 255, verts, sizeof(Vertex_t));
 #endif
 
   // Right channel
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
   glBegin(GL_LINE_STRIP);
 #endif
   for (int i = 0; i < 256; i++)
@@ -172,19 +168,19 @@ extern "C" void Render()
     verts[i].y = g_viewport.Y + g_viewport.Height * 0.66f + (g_fWaveform[1][i] * g_viewport.Height * 0.15f);
     verts[i].z = 1.0;
     verts[i].w = 1;
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
     glVertex2f(verts[i].x, verts[i].y);
 #endif
   }
 
-#ifdef HAVE_LIBGL
+#ifdef HAS_SDL_OPENGL
   glEnd();
   glEnable(GL_BLEND);
   glPopMatrix();
   if ((errcode=glGetError())!=GL_NO_ERROR) {
     printf("Houston, we have a GL problem: %s\n", gluErrorString(errcode));
   }
-#elif !defined(HAVE_LIBGL)
+#elif !defined(HAS_SDL_OPENGL)
   g_device->DrawPrimitiveUP(D3DPT_LINESTRIP, 255, verts, sizeof(Vertex_t));
 #endif
 
@@ -244,7 +240,7 @@ extern "C" unsigned int GetSubModules(char ***names)
 // This dll must stop all runtime activities
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" void Stop()
+extern "C" void ADDON_Stop()
 {
 }
 
@@ -252,7 +248,7 @@ extern "C" void Stop()
 // Do everything before unload of this add-on
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" void Destroy()
+extern "C" void ADDON_Destroy()
 {
 }
 
@@ -260,7 +256,7 @@ extern "C" void Destroy()
 // Returns true if this add-on use settings
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" bool HasSettings()
+extern "C" bool ADDON_HasSettings()
 {
   return false;
 }
@@ -269,16 +265,16 @@ extern "C" bool HasSettings()
 // Returns the current Status of this visualisation
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" ADDON_STATUS GetStatus()
+extern "C" ADDON_STATUS ADDON_GetStatus()
 {
-  return STATUS_OK;
+  return ADDON_STATUS_OK;
 }
 
 //-- GetSettings --------------------------------------------------------------
 // Return the settings for XBMC to display
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" unsigned int GetSettings(StructSetting ***sSet)
+extern "C" unsigned int ADDON_GetSettings(ADDON_StructSetting ***sSet)
 {
   return 0;
 }
@@ -288,7 +284,7 @@ extern "C" unsigned int GetSettings(StructSetting ***sSet)
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
 
-extern "C" void FreeSettings()
+extern "C" void ADDON_FreeSettings()
 {
 }
 
@@ -296,8 +292,15 @@ extern "C" void FreeSettings()
 // Set a specific Setting value (called from XBMC)
 // !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" ADDON_STATUS SetSetting(const char *strSetting, const void* value)
+extern "C" ADDON_STATUS ADDON_SetSetting(const char *strSetting, const void* value)
 {
-  return STATUS_OK;
+  return ADDON_STATUS_OK;
 }
 
+//-- Announce -----------------------------------------------------------------
+// Receive announcements from XBMC
+// !!! Add-on master function !!!
+//-----------------------------------------------------------------------------
+extern "C" void ADDON_Announce(const char *flag, const char *sender, const char *message, const void *data)
+{
+}
