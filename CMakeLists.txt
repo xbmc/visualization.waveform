@@ -1,4 +1,4 @@
-PROJECT(visualization.spectrum)
+PROJECT(visualization.waveform)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
