@@ -31,5 +31,4 @@ SET_TARGET_PROPERTIES(waveform PROPERTIES VERSION 1.0.0
                                           PREFIX "")
 
 INSTALL(TARGETS waveform DESTINATION lib/xbmc/addons/visualization.waveform)
-FILE(GLOB ADDON_DATA addon/*)
-INSTALL(FILES ${ADDON_DATA} DESTINATION share/xbmc/addons/visualization.waveform)
+INSTALL(DIRECTORY visualization.waveform DESTINATION share/xbmc/addons)
