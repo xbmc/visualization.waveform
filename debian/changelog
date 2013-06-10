@@ -1,0 +1,11 @@
+visualization.waveform (1.0.1-1~raring) raring; urgency=low
+
+  * Fix installation paths
+
+ -- Arne Morten Kvarving <arne.morten.kvarving@sintef.no>  Sat, 01 Jun 2013 00:59:22 +0200
+
+visualization.waveform (1.0.0-1~raring) raring; urgency=low
+
+  * Initial release
+
+ -- Arne Morten Kvarving <arne.morten.kvarving@sintef.no>  Sat, 18 May 2013 23:55:32 +0200
