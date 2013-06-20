@@ -1,12 +1,12 @@
-include ../../Makefile.include
-#DEPS= ../../Makefile.include Makefile
+include $(XBMCROOT)/tools/depends/Makefile.include
 
 LIBNAME=xbmc-visualization-waveform
-VERSION=HEAD
+VERSION=master
 GIT_DIR=$(TARBALLS_LOCATION)/$(LIBNAME).git
 BASE_URL=git://github.com/cptspiff/visualization.waveform.git
 DYLIB=$(PLATFORM)/addons/visualization.waveform/waveform.so
-XBMC_ADDONSDIR=../../../../addons
+XBMC_ADDONSDIR=$(XBMCROOT)/addons
+ADDON=visualization.waveform
 
 #tell git to use the addons repo rather than xbmc's repo
 export GIT_DIR
@@ -16,7 +16,7 @@ export GIT_WORK_TREE=$(PLATFORM)
 export MYSQL_CONFIG=$(PREFIX)/bin/mysql_config
 
 # configuration settings
-CONFIGURE=cmake -DCMAKE_INSTALL_PREFIX=$(PREFIX) -DCMAKE_BUILD_TYPE=Release
+CONFIGURE="cmake . -DCMAKE_INSTALL_PREFIX=$(PREFIX) -DCMAKE_BUILD_TYPE=Release"
 
 all: .installed-$(PLATFORM)
 
@@ -41,17 +41,7 @@ $(DYLIB): $(PLATFORM)/Makefile
 	touch $@
 
 .installed-$(PLATFORM): $(DYLIB)
-ifeq (darwin, $(findstring darwin, $(HOST)))
-	for ADDON in `find $(PLATFORM)/addons -type d -name "visualization.*"`; do \
-	  ADDON=`basename $$ADDON` ; \
-	  mkdir -p $(XBMC_ADDONSDIR)/$$ADDON ; \
-	  cp -PRf $(PLATFORM)/addons/$$ADDON/addon/* $(XBMC_ADDONSDIR)/$$ADDON ; \
-	  cp -Pf $(PLATFORM)/addons/$$ADDON/*.so $(XBMC_ADDONSDIR)/$$ADDON ; \
-	  install_name_tool -id "$$ADDON" `find "$(XBMC_ADDONSDIR)/$$ADDON" -type f -name "*.so"` ; \
-	done
-else
-	$(MAKE) -C $(PLATFORM) install
-endif
+	make package
 	touch $@
 
 clean:
@@ -61,4 +51,3 @@ clean:
 distclean::
 	rm -rf $(PLATFORM) .installed-$(PLATFORM)
 	rm -rf $(GIT_DIR)/current
-
