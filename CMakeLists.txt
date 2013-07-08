@@ -2,7 +2,12 @@ PROJECT(visualization.waveform)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
+include(AddonVersion.cmake)
+addon_version(visualization.waveform WAVEFORM)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
+
+OPTION(PACKAGE_ZIP "Package Zip file?" OFF)
 
 IF(WIN32)
   SET(BINDING_FILE ${XBMC_BINDINGS}.zip)
@@ -35,11 +40,11 @@ ADD_LIBRARY(waveform ${SOURCES})
 IF(NOT WIN32)
   TARGET_LINK_LIBRARIES(waveform ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 ENDIF(NOT WIN32)
-SET_TARGET_PROPERTIES(waveform PROPERTIES VERSION 1.0.0
+SET_TARGET_PROPERTIES(waveform PROPERTIES VERSION ${WAVEFORM_VERSION}
                                           SOVERSION 13.0
                                           PREFIX "")
 
-IF(WIN32 OR APPLE)
+IF(PACKAGE_ZIP)
   # Pack files together to create an archive
   INSTALL(DIRECTORY ${PROJECT_NAME} DESTINATION ./)
   IF(WIN32)
@@ -50,7 +55,7 @@ IF(WIN32 OR APPLE)
   SET(CPACK_GENERATOR "ZIP")
   SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY OFF)
   INCLUDE(CPack)
-ELSE(WIN32 OR APPLE)
+ELSE(PACKAGE_ZIP)
   INSTALL(TARGETS waveform DESTINATION lib/xbmc/addons/visualization.waveform)
   INSTALL(DIRECTORY visualization.waveform DESTINATION share/xbmc/addons)
-ENDIF(WIN32 OR APPLE)
+ENDIF(PACKAGE_ZIP)
