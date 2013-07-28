@@ -13,3 +13,11 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Waveform visualization for XBMC
  Waveform visualization for XBMC
+
+Package: xbmc-visualization-waveform-dbg
+Section: debug
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: debug symbols for Waveform visualization for XBMC
+ debug symbols for Waveform visualization for XBMC
+
