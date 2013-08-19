@@ -5,7 +5,6 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 FIND_PACKAGE(xbmc REQUIRED)
-addon_version(visualization.waveform WAVEFORM)
 
 IF(WIN32)
   INCLUDE_DIRECTORIES(${XBMC_INCLUDE_DIR})
@@ -19,8 +18,8 @@ ELSE(WIN32)
   SET(DEPLIBS ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
 ENDIF(WIN32)
 
-SET(SOURCES src/Main.cpp)
+SET(WAVEFORM_SOURCES src/Main.cpp)
 
-build_addon(visualization.waveform SOURCES DEPLIBS WAVEFORM_VERSION)
+build_addon(visualization.waveform WAVEFORM DEPLIBS)
 
-install_addon(visualization.waveform ${WAVEFORM_VERSION})
+include(CPack)
