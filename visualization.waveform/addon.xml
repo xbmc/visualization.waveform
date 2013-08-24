@@ -6,9 +6,9 @@
   provider-name="MrC">
   <extension
     point="xbmc.player.musicviz"
-    library_linux="waveform.so"
-    library_windx="waveform.dll"
-    library_osx="waveform.so"/>
+    library_linux="visualization.waveform.so"
+    library_windx="visualization.waveform.dll"
+    library_osx="visualization.waveform.so"/>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Visualization showing 2 Waveform Graphs on the screen</summary>
     <summary lang="de">Eine Visualisierung, welche 2 wellenförmige Grafiken auf dem Bildschirm zeigt</summary>
