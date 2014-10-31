@@ -1,24 +1,24 @@
-PROJECT(visualization.waveform)
+project(visualization.waveform)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+cmake_minimum_required(VERSION 2.6)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
-FIND_PACKAGE(xbmc REQUIRED)
+find_package(kodi REQUIRED)
 
-IF(WIN32)
-  INCLUDE_DIRECTORIES(${XBMC_INCLUDE_DIR})
-ELSE(WIN32)
-  FIND_PACKAGE(OpenGL REQUIRED)
-  FIND_PACKAGE(GLEW REQUIRED)
-  ADD_DEFINITIONS(-DHAS_SDL_OPENGL)
-  INCLUDE_DIRECTORIES(${OpenGL_INCLUDE_DIR}
+if(WIN32)
+  include_directories(${XBMC_INCLUDE_DIR})
+else()
+  find_package(OpenGL REQUIRED)
+  find_package(GLEW REQUIRED)
+  add_definitions(-DHAS_SDL_OPENGL)
+  include_directories(${OpenGL_INCLUDE_DIR}
                       ${GLEW_INCLUDE_DIR}
-                      ${XBMC_INCLUDE_DIR})
-  SET(DEPLIBS ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
-ENDIF(WIN32)
+                      ${KODI_INCLUDE_DIR})
+  set(DEPLIBS ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES})
+endif()
 
-SET(WAVEFORM_SOURCES src/Main.cpp)
+set(WAVEFORM_SOURCES src/Main.cpp)
 
 build_addon(visualization.waveform WAVEFORM DEPLIBS)
 

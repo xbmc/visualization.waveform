@@ -21,7 +21,7 @@
 // Waveform.vis
 // A simple visualisation example by MrC
 
-#include <xbmc/xbmc_vis_dll.h>
+#include <kodi/xbmc_vis_dll.h>
 #include <stdio.h>
 #ifdef HAS_SDL_OPENGL
 #include <GL/glew.h>
