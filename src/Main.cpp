@@ -24,7 +24,8 @@
 #include <xbmc_vis_dll.h>
 #include <stdio.h>
 #ifdef HAS_OPENGL
-#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #else
 #ifdef _WIN32
 #include <d3d11_1.h>
