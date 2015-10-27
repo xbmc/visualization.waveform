@@ -1,23 +1,23 @@
-Source: xbmc-visualization-waveform
+Source: kodi-visualization-waveform
 Priority: extra
 Maintainer: Arne Morten Kvarving <spiff@xbmc.org>
-Build-Depends: debhelper (>= 8.0.0), cmake, xbmc-addon-dev,
-               xbmc-visualization-dev, libgl1-mesa-dev, libglew-dev
-Standards-Version: 3.9.2
+Build-Depends: debhelper (>= 8.0.0), cmake, kodi-addon-dev, libkodiplatform-dev,
+               kodi-visualization-dev, libgl1-mesa-dev, libglew-dev
+Standards-Version: 3.9.5
 Section: libs
 Homepage: http://xbmc.org
 
-Package: xbmc-visualization-waveform
+Package: kodi-visualization-waveform
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Waveform visualization for XBMC
- Waveform visualization for XBMC
+Description: Waveform visualization for Kodi
+ Waveform visualization for Kodi
 
-Package: xbmc-visualization-waveform-dbg
+Package: kodi-visualization-waveform-dbg
 Section: debug
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: debug symbols for Waveform visualization for XBMC
- debug symbols for Waveform visualization for XBMC
+Description: debug symbols for Waveform visualization for Kodi
+ debug symbols for Waveform visualization for Kodi
 
