@@ -146,7 +146,7 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   if (!props)
     return ADDON_STATUS_UNKNOWN;
 
-  VIS_PROPS* visProps = (VIS_PROPS*)props;
+  AddonProps_Visualization* visProps = (AddonProps_Visualization*)props;
 
 #ifdef HAS_OPENGL
   g_device = visProps->device;
@@ -340,9 +340,8 @@ extern "C" unsigned int GetSubModules(char ***names)
 
 //-- Stop ---------------------------------------------------------------------
 // This dll must stop all runtime activities
-// !!! Add-on master function !!!
 //-----------------------------------------------------------------------------
-extern "C" void ADDON_Stop()
+extern "C" void Stop()
 {
 }
 
