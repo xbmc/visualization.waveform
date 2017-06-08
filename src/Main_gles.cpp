@@ -26,8 +26,6 @@
  *  Ported to GLES by gimli
  */
 
-
-
 #include <string.h>
 #include <math.h>
 #if defined(__APPLE__)
@@ -38,7 +36,7 @@
   #include <GLES2/gl2ext.h>
 #endif
 
-#include "xbmc_vis_dll.h"
+#include <kodi/addon-instance/Visualization.h>
 #include "VisGUIShader.h"
 
 #define NUM_BANDS 16
@@ -55,7 +53,6 @@ GLfloat heights[16][16], cHeights[16][16], scale;
 GLfloat hSpeed = 0.025f;
 GLenum  g_mode = GL_TRIANGLES;
 */
-float g_fWaveform[2][512];
 
 const char *frag = "precision mediump float; \n"
                    "varying lowp vec4 m_colour; \n"
@@ -82,34 +79,57 @@ const char *vert = "attribute vec4 m_attrpos;\n"
                    "  m_cord1     = m_attrcord1;\n"
                    "}\n";
 
-CVisGUIShader  *vis_shader = NULL;
+class CVisualizationWaveForm
+  : public kodi::addon::CAddonBase,
+    public kodi::addon::CInstanceVisualization
+{
+public:
+  CVisualizationWaveForm();
+  virtual ~CVisualizationWaveForm();
+
+  virtual ADDON_STATUS Create() override;
+  virtual void Render() override;
+  virtual void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
+
+private:
+  CVisGUIShader *m_visShader;
+  float m_fWaveform[2][512];
+};
+
+CVisualizationWaveForm::CVisualizationWaveForm()
+  : m_visShader(new CVisGUIShader(vert, frag))
+{
+
+}
+
+//-- Destroy ------------------------------------------------------------------
+// Do everything before unload of this add-on
+// !!! Add-on master function !!!
+//-----------------------------------------------------------------------------
+CVisualizationWaveForm::~CVisualizationWaveForm()
+{
+  if (m_visShader) 
+  {
+    m_visShader->Free();
+    delete m_visShader;
+  }
+}
 
 //-- Create -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-ADDON_STATUS ADDON_Create(void* hdl, void* props)
+ADDON_STATUS CVisualizationWaveForm::Create()
 {
-  if (!props)
+  if(!m_visShader->CompileAndLink())
     return ADDON_STATUS_UNKNOWN;
 
-  vis_shader = new CVisGUIShader(vert, frag);
-
-  if(!vis_shader)
-    return ADDON_STATUS_UNKNOWN;
-
-  if(!vis_shader->CompileAndLink())
-  {
-    delete vis_shader;
-    return ADDON_STATUS_UNKNOWN;
-  }
-
-  return ADDON_STATUS_NEED_SETTINGS;
+  return ADDON_STATUS_OK;
 }
 
 //-- Render -------------------------------------------------------------------
 // Called once per frame. Do all rendering here.
 //-----------------------------------------------------------------------------
-extern "C" void Render()
+void CVisualizationWaveForm::Render()
 {
   GLfloat col[256][3];
   GLfloat ver[256][3];
@@ -117,24 +137,24 @@ extern "C" void Render()
 
   glDisable(GL_BLEND);
 
-  vis_shader->MatrixMode(MM_PROJECTION);
-  vis_shader->PushMatrix();
-  vis_shader->LoadIdentity();
-  //vis_shader->Frustum(-1.0f, 1.0f, -1.0f, 1.0f, 1.5f, 10.0f);
-  vis_shader->MatrixMode(MM_MODELVIEW);
-  vis_shader->PushMatrix();
-  vis_shader->LoadIdentity();
+  m_visShader->MatrixMode(MM_PROJECTION);
+  m_visShader->PushMatrix();
+  m_visShader->LoadIdentity();
+  //m_visShader->Frustum(-1.0f, 1.0f, -1.0f, 1.0f, 1.5f, 10.0f);
+  m_visShader->MatrixMode(MM_MODELVIEW);
+  m_visShader->PushMatrix();
+  m_visShader->LoadIdentity();
 
-  vis_shader->PushMatrix();
-  vis_shader->Translatef(0.0f ,0.0f ,-1.0f);
-  vis_shader->Rotatef(0.0f, 1.0f, 0.0f, 0.0f);
-  vis_shader->Rotatef(0.0f, 0.0f, 1.0f, 0.0f);
-  vis_shader->Rotatef(0.0f, 0.0f, 0.0f, 1.0f);
+  m_visShader->PushMatrix();
+  m_visShader->Translatef(0.0f ,0.0f ,-1.0f);
+  m_visShader->Rotatef(0.0f, 1.0f, 0.0f, 0.0f);
+  m_visShader->Rotatef(0.0f, 0.0f, 1.0f, 0.0f);
+  m_visShader->Rotatef(0.0f, 0.0f, 0.0f, 1.0f);
 
-  vis_shader->Enable();
+  m_visShader->Enable();
 
-  GLint   posLoc = vis_shader->GetPosLoc();
-  GLint   colLoc = vis_shader->GetColLoc();
+  GLint posLoc = m_visShader->GetPosLoc();
+  GLint colLoc = m_visShader->GetColLoc();
 
   glVertexAttribPointer(colLoc, 3, GL_FLOAT, 0, 0, col);
   glVertexAttribPointer(posLoc, 3, GL_FLOAT, 0, 0, ver);
@@ -148,9 +168,9 @@ extern "C" void Render()
     col[i][1] = 128;
     col[i][2] = 128;
     //ver[i][0] = g_viewport.X + ((i / 255.0f) * g_viewport.Width);
-    //ver[i][1] = g_viewport.Y + g_viewport.Height * 0.33f + (g_fWaveform[0][i] * g_viewport.Height * 0.15f);
+    //ver[i][1] = g_viewport.Y + g_viewport.Height * 0.33f + (m_fWaveform[0][i] * g_viewport.Height * 0.15f);
     ver[i][0] = -1.0f + ((i / 255.0f) * 2.0f);
-    ver[i][1] = 0.5f + g_fWaveform[0][i];
+    ver[i][1] = 0.5f + m_fWaveform[0][i];
     ver[i][2] = 1.0f;
     idx[i] = i;
   }
@@ -164,9 +184,9 @@ extern "C" void Render()
     col[i][1] = 128;
     col[i][2] = 128;
     //ver[i][0] = g_viewport.X + ((i / 255.0f) * g_viewport.Width);
-    //ver[i][1] = g_viewport.Y + g_viewport.Height * 0.66f + (g_fWaveform[1][i] * g_viewport.Height * 0.15f);
+    //ver[i][1] = g_viewport.Y + g_viewport.Height * 0.66f + (m_fWaveform[1][i] * g_viewport.Height * 0.15f);
     ver[i][0] = -1.0f + ((i / 255.0f) * 2.0f);
-    ver[i][1] = -0.5f + g_fWaveform[1][i];
+    ver[i][1] = -0.5f + m_fWaveform[1][i];
     ver[i][2] = 1.0f;
     idx[i] = i;
 
@@ -177,125 +197,31 @@ extern "C" void Render()
   glDisableVertexAttribArray(posLoc);
   glDisableVertexAttribArray(colLoc);
 
-  vis_shader->Disable();
+  m_visShader->Disable();
 
-  vis_shader->PopMatrix();
+  m_visShader->PopMatrix();
 
-  vis_shader->PopMatrix();
-  vis_shader->MatrixMode(MM_PROJECTION);
-  vis_shader->PopMatrix();
+  m_visShader->PopMatrix();
+  m_visShader->MatrixMode(MM_PROJECTION);
+  m_visShader->PopMatrix();
 
   glEnable(GL_BLEND);
   
 }
 
-extern "C" void Start(int iChannels, int iSamplesPerSec, int iBitsPerSample, const char* szSongName)
-{
-}
-
-extern "C" void AudioData(const float* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
+void CVisualizationWaveForm::AudioData(const float* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
 {
   int ipos=0;
   while (ipos < 512)
   {
     for (int i=0; i < iAudioDataLength; i+=2)
     {
-      g_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
-      g_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
+      m_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
+      m_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
       ipos++;
       if (ipos >= 512) break;
     }
   }
 }
 
-
-//-- GetInfo ------------------------------------------------------------------
-// Tell XBMC our requirements
-//-----------------------------------------------------------------------------
-extern "C" void GetInfo(VIS_INFO* pInfo)
-{
-  pInfo->bWantsFreq = false;
-  pInfo->iSyncDelay = 0;
-}
-
-
-//-- GetSubModules ------------------------------------------------------------
-// Return any sub modules supported by this vis
-//-----------------------------------------------------------------------------
-extern "C" unsigned int GetSubModules(char ***names)
-{
-  return 0; // this vis supports 0 sub modules
-}
-
-//-- OnAction -----------------------------------------------------------------
-// Handle XBMC actions such as next preset, lock preset, album art changed etc
-//-----------------------------------------------------------------------------
-extern "C" bool OnAction(long flags, const void *param)
-{
-  bool ret = false;
-  return ret;
-}
-
-//-- GetPresets ---------------------------------------------------------------
-// Return a list of presets to XBMC for display
-//-----------------------------------------------------------------------------
-extern "C" unsigned int GetPresets(char ***presets)
-{
-  return 0;
-}
-
-//-- GetPreset ----------------------------------------------------------------
-// Return the index of the current playing preset
-//-----------------------------------------------------------------------------
-extern "C" unsigned GetPreset()
-{
-  return 0;
-}
-
-//-- IsLocked -----------------------------------------------------------------
-// Returns true if this add-on use settings
-//-----------------------------------------------------------------------------
-extern "C" bool IsLocked()
-{
-  return false;
-}
-
-//-- Stop ---------------------------------------------------------------------
-// This dll must cease all runtime activities
-//-----------------------------------------------------------------------------
-extern "C" void Stop()
-{
-}
-
-//-- Destroy ------------------------------------------------------------------
-// Do everything before unload of this add-on
-// !!! Add-on master function !!!
-//-----------------------------------------------------------------------------
-extern "C" void ADDON_Destroy()
-{
-  if (vis_shader) 
-  {
-    vis_shader->Free();
-    delete vis_shader;
-    vis_shader = NULL;
-  }
-}
-
-//-- GetStatus ---------------------------------------------------------------
-// Returns the current Status of this visualisation
-// !!! Add-on master function !!!
-//-----------------------------------------------------------------------------
-extern "C" ADDON_STATUS ADDON_GetStatus()
-{
-  return ADDON_STATUS_OK;
-}
-
-//-- SetSetting ---------------------------------------------------------------
-// Set a specific Setting value (called from XBMC)
-// !!! Add-on master function !!!
-//-----------------------------------------------------------------------------
-extern "C" ADDON_STATUS ADDON_SetSetting(const char *strSetting, const void* value)
-{
-//    return ADDON_STATUS_OK;
-  return ADDON_STATUS_UNKNOWN;
-}
+ADDONCREATOR(CVisualizationWaveForm)

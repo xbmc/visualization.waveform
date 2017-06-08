@@ -21,7 +21,7 @@
 // Waveform.vis
 // A simple visualisation example by MrC
 
-#include <xbmc_vis_dll.h>
+#include <kodi/addon-instance/Visualization.h>
 #include <stdio.h>
 #ifdef HAS_OPENGL
 #ifdef __APPLE__
@@ -40,15 +40,7 @@
 #endif
 #endif
 
-char g_visName[512];
 #ifndef HAS_OPENGL
-ID3D11Device*             g_device = NULL;
-ID3D11DeviceContext*      g_context = NULL;
-ID3D11VertexShader*       g_vShader = NULL;
-ID3D11PixelShader*        g_pShader = NULL;
-ID3D11InputLayout*        g_inputLayout = NULL;
-ID3D11Buffer*             g_vBuffer = NULL;
-ID3D11Buffer*             g_cViewPort = NULL;
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -66,11 +58,7 @@ struct cbViewPort
   float g_viewPortHeigh;
   float align1, align2;
 };
-
-#else
-void* g_device;
 #endif
-float g_fWaveform[2][512];
 
 #ifdef HAS_OPENGL
 typedef struct {
@@ -84,8 +72,6 @@ typedef struct {
 typedef unsigned long D3DCOLOR;
 #endif
 
-D3D11_VIEWPORT g_viewport;
-
 struct Vertex_t
 {
   float x, y, z;
@@ -96,70 +82,90 @@ struct Vertex_t
 #endif
 };
 
-#ifndef HAS_OPENGL
-bool init_renderer_objs()
+class CVisualizationWaveForm
+  : public kodi::addon::CAddonBase,
+    public kodi::addon::CInstanceVisualization
 {
-  // Create vertex shader
-  if (S_OK != g_device->CreateVertexShader(DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode), nullptr, &g_vShader))
-    return false;
+public:
+  CVisualizationWaveForm();
+  virtual ~CVisualizationWaveForm();
 
-  // Create input layout
-  D3D11_INPUT_ELEMENT_DESC layout[] =
-  {
-    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-  };
-  if (S_OK != g_device->CreateInputLayout(layout, ARRAYSIZE(layout), DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode), &g_inputLayout))
-    return false;
+  virtual ADDON_STATUS Create() override;
+  virtual void Render() override;
+  virtual void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
 
-  // Create pixel shader
-  if (S_OK != g_device->CreatePixelShader(DefaultPixelShaderCode, sizeof(DefaultPixelShaderCode), nullptr, &g_pShader))
-    return false;
+private:
+#ifndef HAS_OPENGL
+  bool init_renderer_objs();
+#endif
 
-  // create buffers
-  CD3D11_BUFFER_DESC desc(sizeof(Vertex_t) * 512, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
-  if (S_OK != g_device->CreateBuffer(&desc, NULL, &g_vBuffer))
-    return false;
+#ifndef HAS_OPENGL
+  ID3D11Device* m_device;
+  ID3D11DeviceContext* m_context;
+  ID3D11VertexShader* m_vShader;
+  ID3D11PixelShader* m_pShader;
+  ID3D11InputLayout* m_inputLayout;
+  ID3D11Buffer* m_vBuffer;
+  ID3D11Buffer* m_cViewPort;
+#else
+  void* m_device;
+#endif
+  float m_fWaveform[2][512];
+  D3D11_VIEWPORT m_viewport;
+};
 
-  desc.ByteWidth = sizeof(cbViewPort);
-  desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-  desc.Usage = D3D11_USAGE_DEFAULT;
-  desc.CPUAccessFlags = 0;
-
-  cbViewPort viewPort = { (float)g_viewport.Width, (float)g_viewport.Height, 0.0f, 0.0f };
-  D3D11_SUBRESOURCE_DATA initData;
-  initData.pSysMem = &viewPort;
-
-  if (S_OK != g_device->CreateBuffer(&desc, &initData, &g_cViewPort))
-    return false;
-
-  // we are ready
-  return true;
+CVisualizationWaveForm::CVisualizationWaveForm()
+{
+  m_device = nullptr;
+#ifndef HAS_OPENGL
+  m_context = nullptr;
+  m_vShader = nullptr;
+  m_pShader = nullptr;
+  m_inputLayout = nullptr;
+  m_vBuffer = nullptr;
+  m_cViewPort = nullptr;
+#endif
 }
-#endif // !HAS_OPENGL
+
+//-- Destroy ------------------------------------------------------------------
+// Do everything before unload of this add-on
+// !!! Add-on master function !!!
+//-----------------------------------------------------------------------------
+CVisualizationWaveForm::~CVisualizationWaveForm()
+{
+#ifndef HAS_OPENGL
+  if (m_cViewPort)
+    m_cViewPort->Release();
+  if (m_vBuffer)
+    m_vBuffer->Release();
+  if (m_inputLayout)
+    m_inputLayout->Release();
+  if (m_vShader)
+    m_vShader->Release();
+  if (m_pShader)
+    m_pShader->Release();
+  if (m_device)
+    m_device->Release();
+#endif
+}
 
 //-- Create -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-ADDON_STATUS ADDON_Create(void* hdl, void* props)
+ADDON_STATUS CVisualizationWaveForm::Create()
 {
-  if (!props)
-    return ADDON_STATUS_UNKNOWN;
-
-  AddonProps_Visualization* visProps = (AddonProps_Visualization*)props;
-
 #ifdef HAS_OPENGL
-  g_device = visProps->device;
+  m_device = Device();
 #endif
-  g_viewport.TopLeftX = visProps->x;
-  g_viewport.TopLeftY = visProps->y;
-  g_viewport.Width = visProps->width;
-  g_viewport.Height = visProps->height;
-  g_viewport.MinDepth = 0;
-  g_viewport.MaxDepth = 1;
+  m_viewport.TopLeftX = X();
+  m_viewport.TopLeftY = Y();
+  m_viewport.Width = Width();
+  m_viewport.Height = Height();
+  m_viewport.MinDepth = 0;
+  m_viewport.MaxDepth = 1;
 #ifndef HAS_OPENGL  
-  g_context = (ID3D11DeviceContext*)visProps->device;
-  g_context->GetDevice(&g_device);
+  m_context = (ID3D11DeviceContext*)Device();
+  m_context->GetDevice(&m_device);
   if (!init_renderer_objs())
     return ADDON_STATUS_PERMANENT_FAILURE;
 #endif
@@ -167,26 +173,18 @@ ADDON_STATUS ADDON_Create(void* hdl, void* props)
   return ADDON_STATUS_OK;
 }
 
-//-- Start --------------------------------------------------------------------
-// Called when a new soundtrack is played
-//-----------------------------------------------------------------------------
-extern "C" void Start(int iChannels, int iSamplesPerSec, int iBitsPerSample, const char* szSongName)
-{
-  //printf("Got Start Command\n");
-}
-
 //-- Audiodata ----------------------------------------------------------------
 // Called by XBMC to pass new audio data to the vis
 //-----------------------------------------------------------------------------
-extern "C" void AudioData(const float* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
+void CVisualizationWaveForm::AudioData(const float* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
 {
   int ipos=0;
   while (ipos < 512)
   {
     for (int i=0; i < iAudioDataLength; i+=2)
     {
-      g_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
-      g_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
+      m_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
+      m_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
       ipos++;
       if (ipos >= 512) break;
     }
@@ -197,18 +195,18 @@ extern "C" void AudioData(const float* pAudioData, int iAudioDataLength, float *
 //-- Render -------------------------------------------------------------------
 // Called once per frame. Do all rendering here.
 //-----------------------------------------------------------------------------
-extern "C" void Render()
+void CVisualizationWaveForm::Render()
 {
   Vertex_t  verts[512];
 
 #ifndef HAS_OPENGL
   unsigned stride = sizeof(Vertex_t), offset = 0;
-  g_context->IASetVertexBuffers(0, 1, &g_vBuffer, &stride, &offset);
-  g_context->IASetInputLayout(g_inputLayout);
-  g_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
-  g_context->VSSetShader(g_vShader, 0, 0);
-  g_context->VSSetConstantBuffers(0, 1, &g_cViewPort);
-  g_context->PSSetShader(g_pShader, 0, 0);
+  m_context->IASetVertexBuffers(0, 1, &m_vBuffer, &stride, &offset);
+  m_context->IASetInputLayout(m_inputLayout);
+  m_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+  m_context->VSSetShader(m_vShader, 0, 0);
+  m_context->VSSetConstantBuffers(0, 1, &m_cViewPort);
+  m_context->PSSetShader(m_pShader, 0, 0);
   float xcolor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 #endif
 
@@ -228,8 +226,8 @@ extern "C" void Render()
 #else
     verts[i].col = XMFLOAT4(xcolor);;
 #endif
-    verts[i].x = g_viewport.TopLeftX + ((i / 255.0f) * g_viewport.Width);
-    verts[i].y = g_viewport.TopLeftY + g_viewport.Height * 0.33f + (g_fWaveform[0][i] * g_viewport.Height * 0.15f);
+    verts[i].x = m_viewport.TopLeftX + ((i / 255.0f) * m_viewport.Width);
+    verts[i].y = m_viewport.TopLeftY + m_viewport.Height * 0.33f + (m_fWaveform[0][i] * m_viewport.Height * 0.15f);
     verts[i].z = 1.0;
 #ifdef HAS_OPENGL
     glVertex2f(verts[i].x, verts[i].y);
@@ -253,12 +251,12 @@ extern "C" void Render()
   {
 #ifdef HAS_OPENGL
     verts[i].col = 0xffffffff;
-    verts[i].x = g_viewport.TopLeftX + ((i / 255.0f) * g_viewport.Width);
+    verts[i].x = m_viewport.TopLeftX + ((i / 255.0f) * m_viewport.Width);
 #else
     verts[i].col = XMFLOAT4(xcolor);
-    verts[i].x = g_viewport.TopLeftX + (((i - 256) / 255.0f) * g_viewport.Width);
+    verts[i].x = m_viewport.TopLeftX + (((i - 256) / 255.0f) * m_viewport.Width);
 #endif
-    verts[i].y = g_viewport.TopLeftY + g_viewport.Height * 0.66f + (g_fWaveform[1][i] * g_viewport.Height * 0.15f);
+    verts[i].y = m_viewport.TopLeftY + m_viewport.Height * 0.66f + (m_fWaveform[1][i] * m_viewport.Height * 0.15f);
     verts[i].z = 1.0;
 #ifdef HAS_OPENGL
     glVertex2f(verts[i].x, verts[i].y);
@@ -275,112 +273,58 @@ extern "C" void Render()
 #elif !defined(HAS_OPENGL)
   // a little optimization: generate and send all vertecies for both channels
   D3D11_MAPPED_SUBRESOURCE res;
-  if (S_OK == g_context->Map(g_vBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
+  if (S_OK == m_context->Map(m_vBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &res))
   {
     memcpy(res.pData, verts, sizeof(Vertex_t) * 512);
-    g_context->Unmap(g_vBuffer, 0);
+    m_context->Unmap(m_vBuffer, 0);
   }
   // draw left channel
-  g_context->Draw(256, 0);
+  m_context->Draw(256, 0);
   // draw right channel
-  g_context->Draw(256, 256);
+  m_context->Draw(256, 256);
 #endif
-
 }
 
-//-- GetInfo ------------------------------------------------------------------
-// Tell XBMC our requirements
-//-----------------------------------------------------------------------------
-extern "C" void GetInfo(VIS_INFO* pInfo)
-{
-  pInfo->bWantsFreq = false;
-  pInfo->iSyncDelay = 0;
-}
-
-//-- OnAction -----------------------------------------------------------------
-// Handle XBMC actions such as next preset, lock preset, album art changed etc
-//-----------------------------------------------------------------------------
-extern "C" bool OnAction(long flags, const void *param)
-{
-  bool ret = false;
-  return ret;
-}
-
-//-- GetPresets ---------------------------------------------------------------
-// Return a list of presets to XBMC for display
-//-----------------------------------------------------------------------------
-extern "C" unsigned int GetPresets(char ***presets)
-{
-  return 0;
-}
-
-//-- GetPreset ----------------------------------------------------------------
-// Return the index of the current playing preset
-//-----------------------------------------------------------------------------
-extern "C" unsigned GetPreset()
-{
-  return 0;
-}
-
-//-- IsLocked -----------------------------------------------------------------
-// Returns true if this add-on use settings
-//-----------------------------------------------------------------------------
-extern "C" bool IsLocked()
-{
-  return false;
-}
-
-//-- GetSubModules ------------------------------------------------------------
-// Return any sub modules supported by this vis
-//-----------------------------------------------------------------------------
-extern "C" unsigned int GetSubModules(char ***names)
-{
-  return 0; // this vis supports 0 sub modules
-}
-
-//-- Stop ---------------------------------------------------------------------
-// This dll must stop all runtime activities
-//-----------------------------------------------------------------------------
-extern "C" void Stop()
-{
-}
-
-//-- Detroy -------------------------------------------------------------------
-// Do everything before unload of this add-on
-// !!! Add-on master function !!!
-//-----------------------------------------------------------------------------
-extern "C" void ADDON_Destroy()
-{
 #ifndef HAS_OPENGL
-  if (g_cViewPort)
-    g_cViewPort->Release();
-  if (g_vBuffer)
-    g_vBuffer->Release();
-  if (g_inputLayout)
-    g_inputLayout->Release();
-  if (g_vShader)
-    g_vShader->Release();
-  if (g_pShader)
-    g_pShader->Release();
-  if (g_device)
-    g_device->Release();
-#endif
-}
-
-//-- GetStatus ---------------------------------------------------------------
-// Returns the current Status of this visualisation
-// !!! Add-on master function !!!
-//-----------------------------------------------------------------------------
-extern "C" ADDON_STATUS ADDON_GetStatus()
+bool CVisualizationWaveForm::init_renderer_objs()
 {
-  return ADDON_STATUS_OK;
-}
+  // Create vertex shader
+  if (S_OK != m_device->CreateVertexShader(DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode), nullptr, &m_vShader))
+    return false;
 
-//-- SetSetting ---------------------------------------------------------------
-// Set a specific Setting value (called from XBMC)
-// !!! Add-on master function !!!
-//-----------------------------------------------------------------------------
-extern "C" ADDON_STATUS ADDON_SetSetting(const char *strSetting, const void* value)
-{
-  return ADDON_STATUS_OK;
+  // Create input layout
+  D3D11_INPUT_ELEMENT_DESC layout[] =
+  {
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+  };
+  if (S_OK != m_device->CreateInputLayout(layout, ARRAYSIZE(layout), DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode), &m_inputLayout))
+    return false;
+
+  // Create pixel shader
+  if (S_OK != m_device->CreatePixelShader(DefaultPixelShaderCode, sizeof(DefaultPixelShaderCode), nullptr, &m_pShader))
+    return false;
+
+  // create buffers
+  CD3D11_BUFFER_DESC desc(sizeof(Vertex_t) * 512, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+  if (S_OK != m_device->CreateBuffer(&desc, NULL, &m_vBuffer))
+    return false;
+
+  desc.ByteWidth = sizeof(cbViewPort);
+  desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+  desc.Usage = D3D11_USAGE_DEFAULT;
+  desc.CPUAccessFlags = 0;
+
+  cbViewPort viewPort = { (float)m_viewport.Width, (float)m_viewport.Height, 0.0f, 0.0f };
+  D3D11_SUBRESOURCE_DATA initData;
+  initData.pSysMem = &viewPort;
+
+  if (S_OK != m_device->CreateBuffer(&desc, &initData, &m_cViewPort))
+    return false;
+
+  // we are ready
+  return true;
 }
+#endif // !HAS_OPENGL
+
+ADDONCREATOR(CVisualizationWaveForm)
