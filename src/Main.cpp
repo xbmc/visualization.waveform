@@ -157,10 +157,10 @@ ADDON_STATUS CVisualizationWaveForm::Create()
 #ifdef HAS_OPENGL
   m_device = Device();
 #endif
-  m_viewport.TopLeftX = X();
-  m_viewport.TopLeftY = Y();
-  m_viewport.Width = Width();
-  m_viewport.Height = Height();
+  m_viewport.TopLeftX = -1;
+  m_viewport.TopLeftY = -1;
+  m_viewport.Width = 2;
+  m_viewport.Height = 2;
   m_viewport.MinDepth = 0;
   m_viewport.MaxDepth = 1;
 #ifndef HAS_OPENGL  
@@ -215,7 +215,16 @@ void CVisualizationWaveForm::Render()
   GLenum errcode;
   glColor3f(1.0, 1.0, 1.0);
   glDisable(GL_BLEND);
+
+  glMatrixMode(GL_PROJECTION);
   glPushMatrix();
+  glLoadIdentity();
+  glMatrixMode(GL_MODELVIEW);
+  glPushMatrix();
+  glLoadIdentity();
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
   glTranslatef(0,0,-1.0);
   glBegin(GL_LINE_STRIP);
 #endif
@@ -266,7 +275,12 @@ void CVisualizationWaveForm::Render()
 #ifdef HAS_OPENGL
   glEnd();
   glEnable(GL_BLEND);
+
+
   glPopMatrix();
+  glMatrixMode(GL_PROJECTION);
+  glPopMatrix();
+
   if ((errcode=glGetError())!=GL_NO_ERROR) {
     printf("Houston, we have a GL problem: %s\n", gluErrorString(errcode));
   }
