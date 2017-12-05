@@ -6,12 +6,11 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 find_package(Kodi REQUIRED)
 
-set(WAVEFORM_SOURCES src/Main.cpp)
-
 if(WIN32)
   set(SHADER_FILES src/DefaultVertexShader.hlsl
                    src/DefaultPixelShader.hlsl)
   set(SHADER_INCLUDES)
+  set(WAVEFORM_SOURCES src/Main_dx.cpp)
   foreach( SHADER_FILE ${SHADER_FILES} )
     get_filename_component( FileName ${SHADER_FILE} NAME_WE )
     if(${FileName} MATCHES "(.+Vertex.+)")
@@ -37,6 +36,7 @@ else()
   if(OPENGL_FOUND)
     add_definitions(-DHAS_OPENGL)
     set(DEPLIBS ${OPENGL_LIBRARIES})
+    set(WAVEFORM_SOURCES src/Main.cpp)
   else()
     find_package(OpenGLES2)
     if(OPENGLES2_FOUND)
