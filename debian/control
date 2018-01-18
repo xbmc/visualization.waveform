@@ -2,7 +2,7 @@ Source: kodi-visualization-waveform
 Priority: extra
 Maintainer: Arne Morten Kvarving <spiff@xbmc.org>
 Build-Depends: debhelper (>= 8.0.0), cmake, kodi-addon-dev, libkodiplatform-dev,
-               libgl1-mesa-dev
+               libgl1-mesa-dev, libglu1-mesa-dev
 Standards-Version: 3.9.5
 Section: libs
 Homepage: http://xbmc.org
