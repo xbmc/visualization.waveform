@@ -1,6 +1,5 @@
+cmake_minimum_required(VERSION 3.5)
 project(visualization.waveform)
-
-cmake_minimum_required(VERSION 2.6)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
@@ -32,34 +31,27 @@ if(WIN32)
   endforeach(SHADER_FILE)
   add_custom_target(generate ALL DEPENDS ${SHADER_INCLUDES})
 else()
-  find_package(OpenGL)
-  if(OPENGL_FOUND)
-    add_definitions(-DHAS_OPENGL)
+  find_package(glm REQUIRED)
+
+  if(APP_RENDER_SYSTEM STREQUAL "gl" OR NOT APP_RENDER_SYSTEM)
+    find_package(OpenGl REQUIRED)
     set(DEPLIBS ${OPENGL_LIBRARIES})
-    set(WAVEFORM_SOURCES src/Main.cpp)
-  else()
-    find_package(OpenGLES2)
-    if(OPENGLES2_FOUND)
-      set(INCLUDES ${OPENGLES2_INCLUDE_DIR})
-      add_definitions(-DHAS_GLES2)
-      set(WAVEFORM_SOURCES src/Main_gles.cpp
-                           src/VisGUIShader.cpp
-                           src/VisMatrixGLES.cpp
-                           src/VisShader.cpp)
-
-      set(WAVEFORM_HEADERS src/VisGUIShader.h
-                           src/VisMatrixGLES.h
-                           src/VisShader.h)
-
-      set(DEPLIBS ${OPENGLES2_LIBRARIES})
-    else()
-      message(FATAL_ERROR "No rendering API found. Bailing")
-    endif()
+    set(INCLUDES ${OPENGL_INCLUDE_DIR})
+    add_definitions(${OPENGL_DEFINITIONS})
+  elseif(APP_RENDER_SYSTEM STREQUAL "gles")
+    find_package(OpenGLES REQUIRED)
+    set(DEPLIBS ${OPENGLES_LIBRARIES})
+    set(INCLUDES ${OPENGLES_INCLUDE_DIR})
+    add_definitions(${OPENGLES_DEFINITIONS})
   endif()
+
+  set(WAVEFORM_SOURCES src/Main_gl.cpp)
+
+  include_directories(${GLM_INCLUDE_DIR}
+                      ${PROJECT_SOURCE_DIR}/lib)
 endif()
 
-include_directories(${INCLUDES}
-                    ${KODI_INCLUDE_DIR}/..) # Hack way with "/..", need bigger Kodi cmake rework to match right include ways (becomes done in future)
+include_directories(${INCLUDES} ${KODI_INCLUDE_DIR}/..)  # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
 
 build_addon(visualization.waveform WAVEFORM DEPLIBS)
 
