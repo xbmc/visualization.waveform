@@ -2,7 +2,7 @@ Format: http://dep.debian.net/deps/dep5
 Upstream-Name: visualization.waveform
 
 Files: *
-Copyright: 2005-2013 Team XBMC
+Copyright: 2005-2019 Team Kodi
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@ License: GPL-2+
 Files: debian/*
 Copyright: 2013 Arne Morten Kvarving <arne.morten.kvarving@sintef.no>
            2013 wsnipex <wsnipex@a1.net>
+           2005-2019 Team Kodi
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
