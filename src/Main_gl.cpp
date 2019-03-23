@@ -39,9 +39,8 @@
 #define NUM_BANDS 16
 
 #ifndef M_PI
-#define M_PI       3.141592654f
+#define M_PI 3.141592654f
 #endif
-#define DEG2RAD(d) ( (d) * M_PI/180.0f )
 
 class ATTRIBUTE_HIDDEN CVisualizationWaveForm
   : public kodi::addon::CAddonBase,
@@ -53,7 +52,6 @@ public:
   ~CVisualizationWaveForm() override = default;
 
   bool Start(int channels, int samplesPerSec, int bitsPerSample, std::string songName) override;
-  void Stop() override;
   void Render() override;
   void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
 
@@ -65,7 +63,6 @@ private:
 
   glm::mat4 m_modelProjMat;
 
-  GLuint m_vertexVBO = 0;
   GLint m_uModelProjMatrix = -1;
   GLint m_aPosition = -1;
   GLint m_aColor = -1;
@@ -91,21 +88,8 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
     return false;
   }
 
-  glGenBuffers(1, &m_vertexVBO);
   m_startOK = true;
   return true;
-}
-
-void CVisualizationWaveForm::Stop()
-{
-  if (!m_startOK)
-    return;
-
-  m_startOK = false;
-
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glDeleteBuffers(1, &m_vertexVBO);
-  m_vertexVBO = 0;
 }
 
 //-- Render -------------------------------------------------------------------
@@ -116,23 +100,18 @@ void CVisualizationWaveForm::Render()
   if (!m_startOK)
     return;
 
-  struct PackedVertex {
-    float position[3]; // Position x, y, z
-    float color[4]; // Color r, g, b, a
-  } vertices[256];
+  float position[256][3]; // Position x, y, z
+  float color[256][4]; // Color r, g, b, a
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
-
-  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, position)));
+  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, 0, position);
   glEnableVertexAttribArray(m_aPosition);
 
-  glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, color)));
+  glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, 0, color);
   glEnableVertexAttribArray(m_aColor);
 
   glDisable(GL_BLEND);
 
-  m_modelProjMat = glm::mat4(1.0f);
-  m_modelProjMat = glm::translate(m_modelProjMat, glm::vec3(0.0f ,0.0f ,-1.0f));
+  m_modelProjMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f ,0.0f ,-1.0f));
   m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
   m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -142,31 +121,29 @@ void CVisualizationWaveForm::Render()
   // Left channel
   for (int i = 0; i < 256; i++)
   {
-    vertices[i].color[0] = 0.5f;
-    vertices[i].color[1] = 0.5f;
-    vertices[i].color[2] = 0.5f;
-    vertices[i].color[3] = 1.0f;
-    vertices[i].position[0] = -1.0f + ((i / 255.0f) * 2.0f);
-    vertices[i].position[1] = 0.5f + m_fWaveform[0][i];
-    vertices[i].position[2] = 1.0f;
+    color[i][0] = 0.5f;
+    color[i][1] = 0.5f;
+    color[i][2] = 0.5f;
+    color[i][3] = 1.0f;
+    position[i][0] = -1.0f + ((i / 255.0f) * 2.0f);
+    position[i][1] = 0.5f + m_fWaveform[0][i];
+    position[i][2] = 1.0f;
   }
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   glDrawArrays(GL_LINE_STRIP, 0, 256);
 
   // Right channel
   for (int i = 0; i < 256; i++)
   {
-    vertices[i].color[0] = 0.5f;
-    vertices[i].color[1] = 0.5f;
-    vertices[i].color[2] = 0.5f;
-    vertices[i].color[3] = 1.0f;
-    vertices[i].position[0] = -1.0f + ((i / 255.0f) * 2.0f);
-    vertices[i].position[1] = -0.5f + m_fWaveform[1][i];
-    vertices[i].position[2] = 1.0f;
+    color[i][0] = 0.5f;
+    color[i][1] = 0.5f;
+    color[i][2] = 0.5f;
+    color[i][3] = 1.0f;
+    position[i][0] = -1.0f + ((i / 255.0f) * 2.0f);
+    position[i][1] = -0.5f + m_fWaveform[1][i];
+    position[i][2] = 1.0f;
   }
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   glDrawArrays(GL_LINE_STRIP, 0, 256);
 
   DisableShader();
