@@ -52,6 +52,7 @@ public:
   ~CVisualizationWaveForm() override = default;
 
   bool Start(int channels, int samplesPerSec, int bitsPerSample, std::string songName) override;
+  void Stop() override;
   void Render() override;
   void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
 
@@ -63,6 +64,9 @@ private:
 
   glm::mat4 m_modelProjMat;
 
+#ifdef HAS_GL
+  GLuint m_vertexVBO = 0;
+#endif
   GLint m_uModelProjMatrix = -1;
   GLint m_aPosition = -1;
   GLint m_aColor = -1;
@@ -88,8 +92,26 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
     return false;
   }
 
+#ifdef HAS_GL
+  glGenBuffers(1, &m_vertexVBO);
+#endif
+
   m_startOK = true;
   return true;
+}
+
+void CVisualizationWaveForm::Stop()
+{
+  if (!m_startOK)
+    return;
+
+  m_startOK = false;
+
+#ifdef HAS_GL
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, &m_vertexVBO);
+  m_vertexVBO = 0;
+#endif
 }
 
 //-- Render -------------------------------------------------------------------
@@ -100,6 +122,20 @@ void CVisualizationWaveForm::Render()
   if (!m_startOK)
     return;
 
+#ifdef HAS_GL
+  struct PackedVertex {
+    float position[3]; // Position x, y, z
+    float color[4]; // Color r, g, b, a
+  } vertices[256];
+
+  glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+
+  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, position)));
+  glEnableVertexAttribArray(m_aPosition);
+
+  glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, color)));
+  glEnableVertexAttribArray(m_aColor);
+#else
   float position[256][3]; // Position x, y, z
   float color[256][4]; // Color r, g, b, a
 
@@ -108,6 +144,7 @@ void CVisualizationWaveForm::Render()
 
   glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, 0, color);
   glEnableVertexAttribArray(m_aColor);
+#endif
 
   glDisable(GL_BLEND);
 
@@ -119,6 +156,20 @@ void CVisualizationWaveForm::Render()
   EnableShader();
 
   // Left channel
+#ifdef HAS_GL
+  for (int i = 0; i < 256; i++)
+  {
+    vertices[i].color[0] = 0.5f;
+    vertices[i].color[1] = 0.5f;
+    vertices[i].color[2] = 0.5f;
+    vertices[i].color[3] = 1.0f;
+    vertices[i].position[0] = -1.0f + ((i / 255.0f) * 2.0f);
+    vertices[i].position[1] = 0.5f + m_fWaveform[0][i];
+    vertices[i].position[2] = 1.0f;
+  }
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+#else
   for (int i = 0; i < 256; i++)
   {
     color[i][0] = 0.5f;
@@ -129,10 +180,25 @@ void CVisualizationWaveForm::Render()
     position[i][1] = 0.5f + m_fWaveform[0][i];
     position[i][2] = 1.0f;
   }
+#endif
 
   glDrawArrays(GL_LINE_STRIP, 0, 256);
 
   // Right channel
+#ifdef HAS_GL
+  for (int i = 0; i < 256; i++)
+  {
+    vertices[i].color[0] = 0.5f;
+    vertices[i].color[1] = 0.5f;
+    vertices[i].color[2] = 0.5f;
+    vertices[i].color[3] = 1.0f;
+    vertices[i].position[0] = -1.0f + ((i / 255.0f) * 2.0f);
+    vertices[i].position[1] = -0.5f + m_fWaveform[1][i];
+    vertices[i].position[2] = 1.0f;
+  }
+
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+#else
   for (int i = 0; i < 256; i++)
   {
     color[i][0] = 0.5f;
@@ -143,6 +209,7 @@ void CVisualizationWaveForm::Render()
     position[i][1] = -0.5f + m_fWaveform[1][i];
     position[i][2] = 1.0f;
   }
+#endif
 
   glDrawArrays(GL_LINE_STRIP, 0, 256);
 
