@@ -47,8 +47,7 @@ else()
 
   set(WAVEFORM_SOURCES src/Main_gl.cpp)
 
-  include_directories(${GLM_INCLUDE_DIR}
-                      ${PROJECT_SOURCE_DIR}/lib)
+  include_directories(${GLM_INCLUDE_DIR})
 endif()
 
 include_directories(${INCLUDES} ${KODI_INCLUDE_DIR}/..)  # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
