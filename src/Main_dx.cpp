@@ -57,11 +57,11 @@ class CVisualizationWaveForm
 {
 public:
   CVisualizationWaveForm();
-  virtual ~CVisualizationWaveForm();
+  ~CVisualizationWaveForm() override;
 
-  virtual ADDON_STATUS Create() override;
-  virtual void Render() override;
-  virtual void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
+  ADDON_STATUS Create() override;
+  void Render() override;
+  void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
 
 private:
   bool init_renderer_objs();
