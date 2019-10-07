@@ -1,9 +1,9 @@
 #.rst:
 # FindOpenGLES
 # ------------
-# Finds the OpenGLES2 library
+# Finds the OpenGLES2 and OpenGLES3 library
 #
-# This will define the following variables::
+# This will define the following variables:
 #
 # OPENGLES_FOUND - system has OpenGLES
 # OPENGLES_INCLUDE_DIRS - the OpenGLES include directory
