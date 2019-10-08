@@ -4,6 +4,7 @@ project(visualization.waveform)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${PROJECT_SOURCE_DIR})
 
 find_package(Kodi REQUIRED)
+find_package(glm REQUIRED)
 
 if(WIN32)
   set(SHADER_FILES src/DefaultVertexShader.hlsl
@@ -31,8 +32,6 @@ if(WIN32)
   endforeach(SHADER_FILE)
   add_custom_target(generate ALL DEPENDS ${SHADER_INCLUDES})
 else()
-  find_package(glm REQUIRED)
-
   if(APP_RENDER_SYSTEM STREQUAL "gl" OR NOT APP_RENDER_SYSTEM)
     find_package(OpenGl REQUIRED)
     set(DEPLIBS ${OPENGL_LIBRARIES})
@@ -46,11 +45,11 @@ else()
   endif()
 
   set(WAVEFORM_SOURCES src/Main_gl.cpp)
-
-  include_directories(${GLM_INCLUDE_DIR})
 endif()
 
-include_directories(${INCLUDES} ${KODI_INCLUDE_DIR}/..)  # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
+include_directories(${INCLUDES}
+                    ${GLM_INCLUDE_DIR}
+                    ${KODI_INCLUDE_DIR}/..)  # Hack way with "/..", need bigger Kodi cmake rework to match right include ways
 
 build_addon(visualization.waveform WAVEFORM DEPLIBS)
 
