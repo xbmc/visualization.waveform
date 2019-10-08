@@ -114,10 +114,10 @@ CVisualizationWaveForm::~CVisualizationWaveForm()
 //-----------------------------------------------------------------------------
 ADDON_STATUS CVisualizationWaveForm::Create()
 {
-  m_viewport.TopLeftX = X();
-  m_viewport.TopLeftY = Y();
-  m_viewport.Width = Width();
-  m_viewport.Height = Height();
+  m_viewport.TopLeftX = static_cast<float>(X());
+  m_viewport.TopLeftY = static_cast<float>(Y());
+  m_viewport.Width = static_cast<float>(Width());
+  m_viewport.Height = static_cast<float>(Height());
   m_viewport.MinDepth = 0;
   m_viewport.MaxDepth = 1;
   m_context = (ID3D11DeviceContext*)Device();
