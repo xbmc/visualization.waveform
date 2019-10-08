@@ -57,22 +57,38 @@ public:
   bool Start(int channels, int samplesPerSec, int bitsPerSample, std::string songName) override;
   void Stop() override;
   void Render() override;
+  bool IsDirty() override { return true; }
   void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
 
   void OnCompiledAndLinked() override;
   bool OnEnabled() override;
 
 private:
-  float m_fWaveform[2][512];
+  float m_fWaveform[2][1024];
 
   glm::mat4 m_modelProjMat;
 
 #ifdef HAS_GL
+  struct PackedVertex
+  {
+    glm::vec3 position; // Position x, y, z
+    glm::vec4 color; // Color r, g, b, a
+  } m_vertices[1024];
+
   GLuint m_vertexVBO = 0;
+#else
+  glm::vec3 m_position[1024]; // Position x, y, z
+  glm::vec4 m_color[1024]; // Color r, g, b, a
 #endif
+
   GLint m_uModelProjMatrix = -1;
   GLint m_aPosition = -1;
   GLint m_aColor = -1;
+
+  int m_usedLinePoints = 500;
+  glm::vec4 m_backgroundColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+  glm::vec4 m_lineColor = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+  bool m_ignoreResample = false;
 
   bool m_startOK = false;
 };
@@ -95,9 +111,45 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
     return false;
   }
 
+  kodi::CheckSettingInt("points-per-line", m_usedLinePoints);
+
+  // If lines are 0 use the old style from before
+  if (m_usedLinePoints == 0)
+  {
+    m_usedLinePoints = 250;
+    m_ignoreResample = true;
+  }
+  else
+  {
+    m_ignoreResample = false;
+  }
+
+  kodi::CheckSettingFloat("line-red", m_lineColor.r);
+  kodi::CheckSettingFloat("line-green", m_lineColor.g);
+  kodi::CheckSettingFloat("line-blue", m_lineColor.b);
+
+  kodi::CheckSettingFloat("bg-red", m_backgroundColor.r);
+  kodi::CheckSettingFloat("bg-green", m_backgroundColor.g);
+  kodi::CheckSettingFloat("bg-blue", m_backgroundColor.b);
+  if (m_backgroundColor.r != 0.0f || m_backgroundColor.g != 0.0f || m_backgroundColor.b != 0.0f)
+    m_backgroundColor.a = 1.0f;
+  else
+    m_backgroundColor.a = 0.0f;
+
 #ifdef HAS_GL
   glGenBuffers(1, &m_vertexVBO);
+
+  for (int i = 0; i < m_usedLinePoints; i++)
+    m_vertices[i].color = m_lineColor;
+#else
+  for (int i = 0; i < m_usedLinePoints; i++)
+    m_color[i] = m_lineColor;
 #endif
+
+  m_modelProjMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f ,0.0f ,-1.0f));
+  m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+  m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+  m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
   m_startOK = true;
   return true;
@@ -126,11 +178,6 @@ void CVisualizationWaveForm::Render()
     return;
 
 #ifdef HAS_GL
-  struct PackedVertex {
-    float position[3]; // Position x, y, z
-    float color[4]; // Color r, g, b, a
-  } vertices[256];
-
   glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
 
   glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, position)));
@@ -139,82 +186,48 @@ void CVisualizationWaveForm::Render()
   glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, sizeof(PackedVertex), BUFFER_OFFSET(offsetof(PackedVertex, color)));
   glEnableVertexAttribArray(m_aColor);
 #else
-  float position[256][3]; // Position x, y, z
-  float color[256][4]; // Color r, g, b, a
-
-  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, 0, position);
+  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, 0, m_position);
   glEnableVertexAttribArray(m_aPosition);
 
-  glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, 0, color);
+  glVertexAttribPointer(m_aColor, 4, GL_FLOAT, GL_FALSE, 0, m_color);
   glEnableVertexAttribArray(m_aColor);
 #endif
 
-  glDisable(GL_BLEND);
+  if (m_backgroundColor.a != 0.0f)
+  {
+    glClearColor(m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b, m_backgroundColor.a);
+    glClear(GL_COLOR_BUFFER_BIT);
+  }
 
-  m_modelProjMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f ,0.0f ,-1.0f));
-  m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-  m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
-  m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+  glDisable(GL_BLEND);
 
   EnableShader();
 
   // Left channel
 #ifdef HAS_GL
-  for (int i = 0; i < 256; i++)
-  {
-    vertices[i].color[0] = 0.5f;
-    vertices[i].color[1] = 0.5f;
-    vertices[i].color[2] = 0.5f;
-    vertices[i].color[3] = 1.0f;
-    vertices[i].position[0] = -1.0f + ((i / 255.0f) * 2.0f);
-    vertices[i].position[1] = 0.5f + m_fWaveform[0][i];
-    vertices[i].position[2] = 1.0f;
-  }
+  for (int i = 0; i < m_usedLinePoints; i++)
+    m_vertices[i].position = glm::vec3(-1.0f + ((i / float(m_usedLinePoints)) * 2.0f), 0.5f + m_fWaveform[0][i] * 0.9f, 1.0f);
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices), m_vertices, GL_STATIC_DRAW);
 #else
-  for (int i = 0; i < 256; i++)
-  {
-    color[i][0] = 0.5f;
-    color[i][1] = 0.5f;
-    color[i][2] = 0.5f;
-    color[i][3] = 1.0f;
-    position[i][0] = -1.0f + ((i / 255.0f) * 2.0f);
-    position[i][1] = 0.5f + m_fWaveform[0][i];
-    position[i][2] = 1.0f;
-  }
+  for (int i = 0; i < m_usedLinePoints; i++)
+    m_position[i] = glm::vec3(-1.0f + ((i / float(m_usedLinePoints)) * 2.0f), 0.5f + m_fWaveform[0][i] * 0.9f, 1.0f);
 #endif
 
-  glDrawArrays(GL_LINE_STRIP, 0, 256);
+  glDrawArrays(GL_LINE_STRIP, 0, m_usedLinePoints);
 
   // Right channel
 #ifdef HAS_GL
-  for (int i = 0; i < 256; i++)
-  {
-    vertices[i].color[0] = 0.5f;
-    vertices[i].color[1] = 0.5f;
-    vertices[i].color[2] = 0.5f;
-    vertices[i].color[3] = 1.0f;
-    vertices[i].position[0] = -1.0f + ((i / 255.0f) * 2.0f);
-    vertices[i].position[1] = -0.5f + m_fWaveform[1][i];
-    vertices[i].position[2] = 1.0f;
-  }
+  for (int i = 0; i < m_usedLinePoints; i++)
+    m_vertices[i].position = glm::vec3(-1.0f + ((i / float(m_usedLinePoints)) * 2.0f), -0.5f + m_fWaveform[1][i] * 0.9f, 1.0f);
 
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(m_vertices), m_vertices, GL_STATIC_DRAW);
 #else
-  for (int i = 0; i < 256; i++)
-  {
-    color[i][0] = 0.5f;
-    color[i][1] = 0.5f;
-    color[i][2] = 0.5f;
-    color[i][3] = 1.0f;
-    position[i][0] = -1.0f + ((i / 255.0f) * 2.0f);
-    position[i][1] = -0.5f + m_fWaveform[1][i];
-    position[i][2] = 1.0f;
-  }
+  for (int i = 0; i < m_usedLinePoints; i++)
+    m_position[i] = glm::vec3(-1.0f + ((i / float(m_usedLinePoints)) * 2.0f), -0.5f + m_fWaveform[1][i] * 0.9f, 1.0f);
 #endif
 
-  glDrawArrays(GL_LINE_STRIP, 0, 256);
+  glDrawArrays(GL_LINE_STRIP, 0, m_usedLinePoints);
 
   DisableShader();
 
@@ -229,15 +242,25 @@ void CVisualizationWaveForm::AudioData(const float* pAudioData, int iAudioDataLe
   (void)pFreqData;
   (void)iFreqDataLength;
 
-  int ipos=0;
-  while (ipos < 512)
+  int ipos = 0;
+  int usedStep;
+  if (m_ignoreResample)
   {
-    for (int i=0; i < iAudioDataLength; i+=2)
+    usedStep = 2;
+  }
+  else
+  {
+    usedStep = (iAudioDataLength / m_usedLinePoints) & ~1;
+    usedStep = usedStep < 2 ? 2 : usedStep;
+  }
+  while (ipos < m_usedLinePoints)
+  {
+    for (int i=0; i < iAudioDataLength; i+=usedStep)
     {
       m_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
       m_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
       ipos++;
-      if (ipos >= 512)
+      if (ipos >= m_usedLinePoints)
          break;
     }
   }
