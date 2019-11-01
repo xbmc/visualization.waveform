@@ -101,3 +101,15 @@ msgstr ""
 msgctxt "#30020"
 msgid "Don't calculate"
 msgstr ""
+
+msgctxt "#30021"
+msgid "Line thickness"
+msgstr ""
+
+msgctxt "#30022"
+msgid "To define the thickness of a line with a number of pixels"
+msgstr ""
+
+msgctxt "#30023"
+msgid "%i px"
+msgstr ""
