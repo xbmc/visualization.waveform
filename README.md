@@ -3,7 +3,8 @@
 This is a [Kodi](http://kodi.tv) visualization addon.
 
 [![Build Status](https://travis-ci.org/xbmc/visualization.waveform.svg?branch=Leia)](https://travis-ci.org/xbmc/visualization.waveform/branches)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/visualization.waveform?svg=true)](https://ci.appveyor.com/project/xbmc/visualization-waveform)
+[![Build Status](https://dev.azure.com/teamkodi/binary-addons/_apis/build/status/xbmc.visualization.waveform?branchName=Leia)](https://dev.azure.com/teamkodi/binary-addons/_build/latest?definitionId=31&branchName=Leia)
+<!--- [![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/visualization.waveform?svg=true)](https://ci.appveyor.com/project/xbmc/visualization-waveform) -->
 
 ![screenshot](https://raw.githubusercontent.com/xbmc/visualization.waveform/master/visualization.waveform/resources/screenshot-02.jpg)
 
