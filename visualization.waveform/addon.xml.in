@@ -56,7 +56,7 @@
     <summary lang="sr_SR">Визуелизација која приказује два таласна облика на екрану</summary>
     <summary lang="sv_SE">Visualisering som visar 2 vågformgrafer på skärmen</summary>
     <summary lang="ta_IN">திரையில் 2 அலைவடிவம் வரைபடங்கள் காட்டும் காட்சி</summary>
-    <summary lang="tg_tj">Визуализатсия бо намоиши 2 нақши мавҷшакл дар экран</summary>
+    <summary lang="tg_TJ">Визуализатсия бо намоиши 2 нақши мавҷшакл дар экран</summary>
     <summary lang="th_TH">กำลังแสดงผลภาพเวอร์ชวลไลเซชั่น 'Waveform' เป็น 2  กราฟสัญญาณบนหน้าจอ</summary>
     <summary lang="tr_TR">2 Dalga Grafiğini ekranda gösteren görsel öğe</summary>
     <summary lang="uk_UA">Візуалізація показує на екрані 2 лінії, що змінюються в такт з музикою.</summary>
@@ -109,7 +109,7 @@
     <description lang="sq_AL">Valëzuesi është një Vizualizim i thjeshtë që shfaq 2 Grafikë Valëzues në ekran, nga Një për secilin kanal, të Majtë dhe të Djathtë, që lëvizin sipas ritmit të muzikës</description>
     <description lang="sv_SE">Waveform är en enkel visualisering som visar 2 vågformgrafer på skärmen, en vardera för vänster och höger kanal som rör sig i takt med musiken.</description>
     <description lang="ta_IN">திரையில் 2 அலைவடிவம் வரைபடங்கள் காட்டப்படும், ஒன்று இடது புற சேனலுக்கும் மற்றொன்று வலதுபுற சேனலுக்கு உரியதாகும்.</description>
-    <description lang="tg_tj">Waveform - визуализатсияи осонест, ки дар экран 2 нақши мавҷшаклро намоиш медиҳад, ду нақши алоҳида барои шабакаи чап ва рости ритми мусиқӣ</description>
+    <description lang="tg_TJ">Waveform - визуализатсияи осонест, ки дар экран 2 нақши мавҷшаклро намоиш медиҳад, ду нақши алоҳида барои шабакаи чап ва рости ритми мусиқӣ</description>
     <description lang="th_TH">Waveform เป็นการแสดงผลภาพเวอร์ชวลไลเซชั่นพื้นฐานที่จะแสดงกราฟสัญญาณเสียง 2 กราฟบนหน้าจอ โดยเป็นกราฟสัญญาณเสียงซ้ายและขวาตามจังหวะของเพลง</description>
     <description lang="tr_TR">Dalgaformu, müzik vuruşlarına göre biri sol biri sağ kanal olmak üzere 2 dalga grafiğini ekranda gösteren görsel öğedir.</description>
     <description lang="uk_UA">Waveform є простою візуалізацією що показує 2 осцилограми на екрані. Кожна лінія відповідає своєму каналу і змінюється в такт з музикою.</description>
