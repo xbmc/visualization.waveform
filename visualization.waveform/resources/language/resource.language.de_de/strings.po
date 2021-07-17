@@ -111,5 +111,9 @@ msgid "To define the thickness of a line with a number of pixels."
 msgstr "Definieren der Dicke einer Linie mit einer Anzahl von Pixeln."
 
 msgctxt "#30023"
-msgid "%i px"
-msgstr "%i px"
+msgid "{0:d} px"
+msgstr ""
+
+#~ msgctxt "#30023"
+#~ msgid "%i px"
+#~ msgstr "%i px"

@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#settings labels
+# settings labels
 msgctxt "#30000"
 msgid "Points per line"
 msgstr ""
@@ -110,5 +110,5 @@ msgid "To define the thickness of a line with a number of pixels."
 msgstr ""
 
 msgctxt "#30023"
-msgid "%i px"
+msgid "{0:d} px"
 msgstr ""
