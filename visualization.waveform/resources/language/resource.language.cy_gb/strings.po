@@ -14,10 +14,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : "
-"(n==3) ? 3 :(n==6) ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=(n==0) ? 0 : (n==1) ? 1 : (n==2) ? 2 : (n==3) ? 3 :(n==6) ? 4 : 5;\n"
 
-#settings labels
+# settings labels
 msgctxt "#30000"
 msgid "Points per line"
 msgstr ""
@@ -111,5 +110,5 @@ msgid "To define the thickness of a line with a number of pixels."
 msgstr ""
 
 msgctxt "#30023"
-msgid "%i px"
+msgid "{0:d} px"
 msgstr ""
