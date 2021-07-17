@@ -16,6 +16,14 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n % 10 == 1 && (n % 100 < 11 || n % 100 > 19)) ? 0 : ((n % 10 >= 2 && n % 10 <= 9 && (n % 100 < 11 || n % 100 > 19)) ? 1 : 2);\n"
 
+msgctxt "Addon Summary"
+msgid "Visualisation showing 2 Waveform Graphs on the screen"
+msgstr "Vizualizacija kuri parodo dvi garso bangas"
+
+msgctxt "Addon Description"
+msgid "Waveform is a simple Visualisation showing 2 Waveform Graphs on the screen, One each for Left and Right channels that move to the beat of the music"
+msgstr "Waveform yra paprasta vizualizacija katra rodo dvi garso bangas ekrane. Viena banga vieno kanalo garsas."
+
 # settings labels
 msgctxt "#30000"
 msgid "Points per line"
