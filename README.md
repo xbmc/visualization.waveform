@@ -3,9 +3,9 @@
 This is a [Kodi](http://kodi.tv) visualization addon.
 
 [![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](LICENSE.md)
-[![Build Status](https://dev.azure.com/teamkodi/binary-addons/_apis/build/status/xbmc.visualization.waveform?branchName=Matrix)](https://dev.azure.com/teamkodi/binary-addons/_build/latest?definitionId=31&branchName=Matrix)
-[![Build Status](https://jenkins.kodi.tv/view/Addons/job/xbmc/job/visualization.waveform/job/Matrix/badge/icon)](https://jenkins.kodi.tv/blue/organizations/jenkins/xbmc%2Fvisualization.waveform/branches/)
-<!--- [![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/visualization.waveform?branch=Matrix&svg=true)](https://ci.appveyor.com/project/xbmc/visualization-waveform?branch=Matrix) -->
+[![Build Status](https://dev.azure.com/teamkodi/binary-addons/_apis/build/status/xbmc.visualization.waveform?branchName=Nexus)](https://dev.azure.com/teamkodi/binary-addons/_build/latest?definitionId=31&branchName=Nexus)
+[![Build Status](https://jenkins.kodi.tv/view/Addons/job/xbmc/job/visualization.waveform/job/Nexus/badge/icon)](https://jenkins.kodi.tv/blue/organizations/jenkins/xbmc%2Fvisualization.waveform/branches/)
+<!--- [![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/visualization.waveform?branch=Nexus&svg=true)](https://ci.appveyor.com/project/xbmc/visualization-waveform?branch=Nexus) -->
 
 ![screenshot](https://raw.githubusercontent.com/xbmc/visualization.waveform/master/visualization.waveform/resources/screenshot-02.jpg)
 
@@ -20,7 +20,7 @@ The following instructions assume you will have built Kodi already in the `kodi-
 suggested by the README.
 
 1. `git clone --branch master https://github.com/xbmc/xbmc.git`
-2. `git clone --branch Matrix https://github.com/xbmc/visualization.waveform.git`
+2. `git clone --branch Nexus https://github.com/xbmc/visualization.waveform.git`
 3. `cd visualization.waveform && mkdir build && cd build`
 4. `cmake -DADDONS_TO_BUILD=visualization.waveform -DADDON_SRC_PREFIX=../.. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=../../xbmc/kodi-build/addons -DPACKAGE_ZIP=1 ../../xbmc/cmake/addons`
 5. `make`
