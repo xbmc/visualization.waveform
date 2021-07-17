@@ -3,7 +3,6 @@
 This is a [Kodi](http://kodi.tv) visualization addon.
 
 [![License: GPL-2.0-or-later](https://img.shields.io/badge/License-GPL%20v2+-blue.svg)](LICENSE.md)
-[![Build Status](https://travis-ci.org/xbmc/visualization.waveform.svg?branch=Matrix)](https://travis-ci.org/xbmc/visualization.waveform/branches)
 [![Build Status](https://dev.azure.com/teamkodi/binary-addons/_apis/build/status/xbmc.visualization.waveform?branchName=Matrix)](https://dev.azure.com/teamkodi/binary-addons/_build/latest?definitionId=31&branchName=Matrix)
 [![Build Status](https://jenkins.kodi.tv/view/Addons/job/xbmc/job/visualization.waveform/job/Matrix/badge/icon)](https://jenkins.kodi.tv/blue/organizations/jenkins/xbmc%2Fvisualization.waveform/branches/)
 <!--- [![Build Status](https://ci.appveyor.com/api/projects/status/github/xbmc/visualization.waveform?branch=Matrix&svg=true)](https://ci.appveyor.com/project/xbmc/visualization-waveform?branch=Matrix) -->
