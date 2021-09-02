@@ -58,7 +58,7 @@
     <summary lang="pt_BR">Visualização que mostra 2 gráficos ondulantes</summary>
     <summary lang="pt_PT">Visualização que mostra 2 gráficos ondulantes no ecrã</summary>
     <summary lang="ro_RO">Vizualizare care arată 2 grafice Waveform pe ecran</summary>
-    <summary lang="ru_RU">Визуализация, показывающая  на экране 2 волновых графика</summary>
+    <summary lang="ru_RU">Визуализация, показывающая на экране 2 волновых графика</summary>
     <summary lang="se_NO">Visualisering som visar 2 vågformsgrafer på skärmen</summary>
     <summary lang="sk_SK">Vizualizácia zobrazujúca 2 grafy priebehu signálu</summary>
     <summary lang="sl_SI">Vizualizacija zvoka z dvema valovnima oblikama</summary>
@@ -67,7 +67,7 @@
     <summary lang="sv_SE">Visualisering som visar 2 vågformgrafer på skärmen</summary>
     <summary lang="ta_IN">திரையில் 2 அலைவடிவம் வரைபடங்கள் காட்டும் காட்சி</summary>
     <summary lang="tg_TJ">Визуализатсия бо намоиши 2 нақши мавҷшакл дар экран</summary>
-    <summary lang="th_TH">กำลังแสดงผลภาพเวอร์ชวลไลเซชั่น 'Waveform' เป็น 2  กราฟสัญญาณบนหน้าจอ</summary>
+    <summary lang="th_TH">กำลังแสดงผลภาพเวอร์ชวลไลเซชั่น 'Waveform' เป็น 2 กราฟสัญญาณบนหน้าจอ</summary>
     <summary lang="tr_TR">2 Dalga Grafiğini ekranda gösteren görsel öğe</summary>
     <summary lang="uk_UA">Візуалізація показує на екрані 2 лінії, що змінюються в такт з музикою.</summary>
     <summary lang="vi_VN">Trình diễn đồ họa 2 đường sóng lên màn hình</summary>
@@ -101,7 +101,7 @@
     <description lang="id_ID">Waveform adalah visualisasi sederhana yang menunjukkan grafik dua gelombang pada layar, masing-masing untuk Satu saluran Kiri dan Kanan yang bergerak dengan ketukan musik</description>
     <description lang="it_IT">Waveform è un semplice visualizzatore che mostra 2 grafici di forma d'onda sullo schermo, uno per il canale destro e uno per quello sinistro, che si muovono a ritmo di musica</description>
     <description lang="ja_JP">Waveform は画面に2波形グラフを表示するシンプルなビジュアライザーです。音楽に合わせて、右チャンネル、左チャンネルの波形が表示されます。</description>
-    <description lang="ko_KR">Waveform은 간단히 두개의 웨이브폼을 화면에 보여줍니다. 각각 왼쪽, 오른쪽 채널이고 음악의 비트에 따라 움직입니다.</description>
+    <description lang="ko_KR">Waveform은 간단히 두개의 웨이브폼을 화면에 보여줍니다. 각각 왼쪽, 오른쪽 채널이고 음악의 비트에 따라 움직입니다</description>
     <description lang="lt_LT">Waveform yra paprasta vizualizacija katra rodo dvi garso bangas ekrane. Viena banga vieno kanalo garsas.</description>
     <description lang="lv_LV">Waveform ir vienkārša vizualizācija, kas atēlo 2 viļņveida grafikus uz ekrāna, vienu - labajam, otru - kreisajam kanālam, kas kustās muzikas ritmā</description>
     <description lang="mk_MK">Бранови е едноставна визуализација која покажува 2 брановидни графови на екран, по еден за десниот и левиот канал од музиката</description>
