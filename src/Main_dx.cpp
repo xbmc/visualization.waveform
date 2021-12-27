@@ -125,7 +125,7 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
   (void)bitsPerSample;
   (void)songName;
 
-  kodi::CheckSettingInt("points-per-line", m_usedLinePoints);
+  kodi::addon::CheckSettingInt("points-per-line", m_usedLinePoints);
 
   // If lines are 0 use the old style from before
   if (m_usedLinePoints == 0)
@@ -138,13 +138,13 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
     m_ignoreResample = false;
   }
 
-  kodi::CheckSettingFloat("line-red", m_lineColor.r);
-  kodi::CheckSettingFloat("line-green", m_lineColor.g);
-  kodi::CheckSettingFloat("line-blue", m_lineColor.b);
+  kodi::addon::CheckSettingFloat("line-red", m_lineColor.r);
+  kodi::addon::CheckSettingFloat("line-green", m_lineColor.g);
+  kodi::addon::CheckSettingFloat("line-blue", m_lineColor.b);
 
-  kodi::CheckSettingFloat("bg-red", m_backgroundColor.r);
-  kodi::CheckSettingFloat("bg-green", m_backgroundColor.g);
-  kodi::CheckSettingFloat("bg-blue", m_backgroundColor.b);
+  kodi::addon::CheckSettingFloat("bg-red", m_backgroundColor.r);
+  kodi::addon::CheckSettingFloat("bg-green", m_backgroundColor.g);
+  kodi::addon::CheckSettingFloat("bg-blue", m_backgroundColor.b);
   if (m_backgroundColor.r != 0.0f || m_backgroundColor.g != 0.0f || m_backgroundColor.b != 0.0f)
     m_backgroundColor.a = 1.0f;
   else
