@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <addon
   id="visualization.waveform"
-  version="20.0.1"
+  version="20.1.0"
   name="Waveform"
   provider-name="MrC">
   <requires>@ADDON_DEPENDS@</requires>
@@ -124,7 +124,7 @@
     <description lang="tr_TR">Dalgaformu, müzik vuruşlarına göre biri sol biri sağ kanal olmak üzere 2 dalga grafiğini ekranda gösteren görsel öğedir.</description>
     <description lang="uk_UA">Waveform є простою візуалізацією що показує 2 осцилограми на екрані. Кожна лінія відповідає своєму каналу і змінюється в такт з музикою.</description>
     <description lang="vi_VN">Waveform là một màn trình diễn đồ họa đơn giản hiển thị 2 đường sóng lên màn hình, Mỗi đường sóng sẽ đại diện cho một kênh tín hiệu loa trái hoặc phải di chuyển theo nhịp điệu của bài hát</description>
-    <description lang="zh_CN">Waveform 是一个简单的可视化效果，它在屏幕上显示两个波形图，分别与音乐左右声道的节拍相呼应。</description>
+    <description lang="zh_CN">Waveform 是一个简单的可视化效果，它在屏幕上显示两个波形图，分别与音乐左右声道的节拍相呼应</description>
     <description lang="zh_TW">Waveform是一個簡單的可在屏幕上顯示2波形圖的視覺效果，左右聲道會跟著音樂節拍移動</description>
   </extension>
 </addon>
