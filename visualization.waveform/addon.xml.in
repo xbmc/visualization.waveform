@@ -69,7 +69,7 @@
     <summary lang="tg_TJ">Визуализатсия бо намоиши 2 нақши мавҷшакл дар экран</summary>
     <summary lang="th_TH">กำลังแสดงผลภาพเวอร์ชวลไลเซชั่น &apos;Waveform&apos; เป็น 2 กราฟสัญญาณบนหน้าจอ</summary>
     <summary lang="tr_TR">2 Dalga Grafiğini ekranda gösteren görsel öğe</summary>
-    <summary lang="uk_UA">Візуалізація показує на екрані 2 лінії, що змінюються в такт з музикою.</summary>
+    <summary lang="uk_UA">Візуалізація показує на екрані 2 лінії, що змінюються в такт з музикою</summary>
     <summary lang="vi_VN">Trình diễn đồ họa 2 đường sóng lên màn hình</summary>
     <summary lang="zh_CN">在屏幕上显示两个波形图的可视化效果</summary>
     <summary lang="zh_TW">在屏幕上顯示2波形圖的視覺效果</summary>
@@ -122,7 +122,7 @@
     <description lang="tg_TJ">Waveform - визуализатсияи осонест, ки дар экран 2 нақши мавҷшаклро намоиш медиҳад, ду нақши алоҳида барои шабакаи чап ва рости ритми мусиқӣ</description>
     <description lang="th_TH">Waveform เป็นการแสดงผลภาพเวอร์ชวลไลเซชั่นพื้นฐานที่จะแสดงกราฟสัญญาณเสียง 2 กราฟบนหน้าจอ โดยเป็นกราฟสัญญาณเสียงซ้ายและขวาตามจังหวะของเพลง</description>
     <description lang="tr_TR">Dalgaformu, müzik vuruşlarına göre biri sol biri sağ kanal olmak üzere 2 dalga grafiğini ekranda gösteren görsel öğedir.</description>
-    <description lang="uk_UA">Waveform є простою візуалізацією що показує 2 осцилограми на екрані. Кожна лінія відповідає своєму каналу і змінюється в такт з музикою.</description>
+    <description lang="uk_UA">Waveform є простою візуалізацією, що показує 2 осцилограми на екрані. Кожна лінія відповідає своєму каналу і змінюється в такт з музикою</description>
     <description lang="vi_VN">Waveform là một màn trình diễn đồ họa đơn giản hiển thị 2 đường sóng lên màn hình, Mỗi đường sóng sẽ đại diện cho một kênh tín hiệu loa trái hoặc phải di chuyển theo nhịp điệu của bài hát</description>
     <description lang="zh_CN">Waveform 是一个简单的可视化效果，它在屏幕上显示两个波形图，分别与音乐左右声道的节拍相呼应</description>
     <description lang="zh_TW">Waveform是一個簡單的可在屏幕上顯示2波形圖的視覺效果，左右聲道會跟著音樂節拍移動</description>
