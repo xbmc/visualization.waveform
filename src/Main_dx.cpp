@@ -50,9 +50,9 @@ public:
   ~CVisualizationWaveForm() override;
 
   ADDON_STATUS Create() override;
-  bool Start(int channels, int samplesPerSec, int bitsPerSample, std::string songName) override;
+  bool Start(int channels, int samplesPerSec, int bitsPerSample, const std::string& songName) override;
   void Render() override;
-  void AudioData(const float* audioData, int audioDataLength, float *freqData, int freqDataLength) override;
+  void AudioData(const float* audioData, size_t audioDataLength) override;
 
 private:
   bool init_renderer_objs();
@@ -118,7 +118,7 @@ ADDON_STATUS CVisualizationWaveForm::Create()
 //-- Start -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerSample, std::string songName)
+bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerSample, const std::string& songName)
 {
   (void)channels;
   (void)samplesPerSec;
@@ -156,14 +156,11 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
 //-- Audiodata ----------------------------------------------------------------
 // Called by Kodi to pass new audio data to the vis
 //-----------------------------------------------------------------------------
-void CVisualizationWaveForm::AudioData(const float* pAudioData, int iAudioDataLength, float *pFreqData, int iFreqDataLength)
+void CVisualizationWaveForm::AudioData(const float* pAudioData, size_t iAudioDataLength)
 {
-  (void)pFreqData;
-  (void)iFreqDataLength;
-
-  int ipos = 0;
-  int length = iAudioDataLength;
-  int usedStep;
+  size_t ipos = 0;
+  size_t length = iAudioDataLength;
+  size_t usedStep;
   if (m_ignoreResample)
   {
     usedStep = 2;
@@ -176,7 +173,7 @@ void CVisualizationWaveForm::AudioData(const float* pAudioData, int iAudioDataLe
 
   while (ipos < m_usedLinePoints)
   {
-    for (int i=0; i < length; i+=usedStep)
+    for (size_t i=0; i < length; i+=usedStep)
     {
       m_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
       m_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
