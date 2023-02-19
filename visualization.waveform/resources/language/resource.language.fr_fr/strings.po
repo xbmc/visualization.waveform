@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: KODI Addons\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2022-06-27 09:14+0000\n"
+"PO-Revision-Date: 2023-02-17 23:02+0000\n"
 "Last-Translator: Christian Gade <gade@kodi.tv>\n"
 "Language-Team: French (France) <https://kodi.weblate.cloud/projects/kodi-add-ons-look-and-feel/visualization-waveform/fr_fr/>\n"
 "Language: fr_fr\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.13\n"
+"X-Generator: Weblate 4.15.2\n"
 
 msgctxt "Addon Summary"
 msgid "Visualisation showing 2 Waveform Graphs on the screen"
@@ -28,15 +28,15 @@ msgstr "Waveform est une visualisation simple affichant deux graphiques de forme
 # settings labels
 msgctxt "#30000"
 msgid "Points per line"
-msgstr ""
+msgstr "Points par ligne"
 
 msgctxt "#30001"
 msgid "Positions to represent the current frequency in a line."
-msgstr ""
+msgstr "Positions pour représenter la fréquence actuelle dans une ligne."
 
 msgctxt "#30002"
 msgid "Line color"
-msgstr ""
+msgstr "Couleur de la ligne"
 
 msgctxt "#30003"
 msgid "Red"
@@ -44,7 +44,7 @@ msgstr "Rouge"
 
 msgctxt "#30004"
 msgid "Strength of red color in the line."
-msgstr ""
+msgstr "Intensité de la couleur rouge dans la ligne."
 
 msgctxt "#30005"
 msgid "Green"
@@ -52,7 +52,7 @@ msgstr "Vert"
 
 msgctxt "#30006"
 msgid "Strength of green color in the line."
-msgstr ""
+msgstr "Intensité de la couleur verte dans la ligne."
 
 msgctxt "#30007"
 msgid "Blue"
@@ -60,19 +60,19 @@ msgstr "Bleu"
 
 msgctxt "#30008"
 msgid "Strength of blue color in the line."
-msgstr ""
+msgstr "Intensité de la couleur bleue dans la ligne."
 
 msgctxt "#30009"
 msgid "Alpha"
-msgstr ""
+msgstr "Alpha"
 
 msgctxt "#30010"
 msgid "Strength of alpha in the line."
-msgstr ""
+msgstr "Force de l'alpha dans la ligne."
 
 msgctxt "#30011"
 msgid "Background color"
-msgstr ""
+msgstr "Couleur de l'arrière plan"
 
 msgctxt "#30012"
 msgid "Red"
@@ -80,7 +80,7 @@ msgstr "Rouge"
 
 msgctxt "#30013"
 msgid "Strength of red color in the background."
-msgstr ""
+msgstr "Intensité de la couleur rouge en arrière-plan."
 
 msgctxt "#30014"
 msgid "Green"
@@ -88,7 +88,7 @@ msgstr "Vert"
 
 msgctxt "#30015"
 msgid "Strength of green color in the background."
-msgstr ""
+msgstr "Intensité de la couleur verte en arrière-plan."
 
 msgctxt "#30016"
 msgid "Blue"
@@ -96,28 +96,28 @@ msgstr "Bleu"
 
 msgctxt "#30017"
 msgid "Strength of blue color in the background."
-msgstr ""
+msgstr "Intensité de la couleur bleue en arrière-plan."
 
 msgctxt "#30018"
 msgid "Alpha"
-msgstr ""
+msgstr "Alpha"
 
 msgctxt "#30019"
 msgid "Strength of alpha in the background."
-msgstr ""
+msgstr "Force de l'alpha en arrière-plan."
 
 msgctxt "#30020"
 msgid "Don't calculate"
-msgstr ""
+msgstr "Ne pas calculer"
 
 msgctxt "#30021"
 msgid "Line thickness"
-msgstr ""
+msgstr "Épaisseur de ligne"
 
 msgctxt "#30022"
 msgid "To define the thickness of a line with a number of pixels."
-msgstr ""
+msgstr "Pour définir l'épaisseur d'une ligne avec un nombre de pixels."
 
 msgctxt "#30023"
 msgid "{0:d} px"
-msgstr ""
+msgstr "{0:d} px"
