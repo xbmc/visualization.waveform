@@ -57,6 +57,8 @@ private:
 
   glm::mat4 m_modelProjMat;
 
+  GLuint m_vao = 0;
+
 #ifdef HAS_GL
   GLuint m_vertexVBO = 0;
 #endif
@@ -131,6 +133,8 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
   else
     m_backgroundColor.a = 0.0f;
 
+  glGenVertexArrays(1, &m_vao);
+
 #ifdef HAS_GL
   glGenBuffers(1, &m_vertexVBO);
 #endif
@@ -156,6 +160,8 @@ void CVisualizationWaveForm::Stop()
   glDeleteBuffers(1, &m_vertexVBO);
   m_vertexVBO = 0;
 #endif
+
+  glDeleteVertexArrays(1, &m_vao);
 }
 
 //-- Render -------------------------------------------------------------------
@@ -165,6 +171,8 @@ void CVisualizationWaveForm::Render()
 {
   if (!m_startOK)
     return;
+
+  glBindVertexArray(m_vao);
 
 #ifdef HAS_GL
   glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
@@ -203,6 +211,8 @@ void CVisualizationWaveForm::Render()
 #ifdef HAS_GL
   glDisable(GL_LINE_SMOOTH);
 #endif
+
+  glBindVertexArray(0);
 }
 
 void CVisualizationWaveForm::DrawLine(float* waveform, bool topBottom)
