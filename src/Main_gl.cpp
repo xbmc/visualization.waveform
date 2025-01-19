@@ -116,7 +116,7 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
   }
   else
   {
-    m_position.resize(1024*6);
+    m_position.resize(1024);
   }
 
   kodi::addon::CheckSettingFloat("line-red", m_lineColor.r);
@@ -192,7 +192,7 @@ void CVisualizationWaveForm::Render()
   DrawLine(m_fWaveform[0], false);
 
   // Right channel
-  DrawLine(m_fWaveform[1], true);
+  // DrawLine(m_fWaveform[1], true);
 
   DisableShader();
 
