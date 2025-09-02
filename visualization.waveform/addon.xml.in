@@ -23,6 +23,7 @@
     <summary lang="ar_SA">التصوير يظهر2 رسم بياني موجي على الشاشة</summary>
     <summary lang="be_BY">Візуалізацыя што паказвае 2 графікі сыгналу на экране</summary>
     <summary lang="bg_BG">Визуализация представяща две осцилиращи вълни</summary>
+    <summary lang="bs_BA">Vizualizacija koja prikazuje 2 grafikona talasnih oblika na ekranu</summary>
     <summary lang="ca_ES">Visualització que mostra 2 gràfics en forma d&apos;ona a la pantalla</summary>
     <summary lang="cs_CZ">Vizualizace zobrazující 2 grafy průběhu vlny na obrazovce</summary>
     <summary lang="cy_GB">Delweddu&apos;n dangos 2 Graff Ffurf Ton ar y sgrin</summary>
@@ -77,6 +78,7 @@
     <description lang="ar_SA">التشكيل الموجي هو تصوير بسيط يظهر2 رسم بياني موجي على الشاشة, واحد لقنوات اليسار و اليمين التر تتحرك على وقع الموسيقى</description>
     <description lang="be_BY">Waveform is a simple Visualization showing 2 Waveform Graphs on the screen, One each for Left and Right channels that move to the beat of the music</description>
     <description lang="bg_BG">Waveform представя графика на две осцилиращи вълни на екрана, по една за всеки канал (ляв и десен), който реагират на ритъма на музиката.</description>
+    <description lang="bs_BA">Talasni oblik je jednostavna vizualizacija koja na ekranu prikazuje 2 grafikona talasnog oblika, po jedan za lijevi i desni kanal, koji se kreću u ritmu muzike</description>
     <description lang="ca_ES">Waveform és una visualització molt simple que mostra 2 gràfics en forma d&apos;ona a la pantalla, un per a cada un dels canals Esquerre i Dret que es mouen al ritme de la música</description>
     <description lang="cs_CZ">Průběh vlny je jednoduchá vizualizace zobrazující 2 grafy průběhu vlny na obrazovce, které znázorňují levý a pravý kanál a pohybují se v rytmu hudby</description>
     <description lang="cy_GB">Delweddu syml yw Waveform sy&apos;n dangos 2 Graff Ffurf Ton ar y sgrin. Un yr un ar gyfer y sianel de a chwith sy&apos;n symud i guriad y gerddoriaeth</description>
