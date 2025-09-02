@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: KODI Addons\n"
 "Report-Msgid-Bugs-To: translations@kodi.tv\n"
 "POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"PO-Revision-Date: 2022-04-08 08:46+0000\n"
-"Last-Translator: Christian Gade <gade@kodi.tv>\n"
+"PO-Revision-Date: 2025-09-02 17:39+0000\n"
+"Last-Translator: Alexey <signfinder@gmail.com>\n"
 "Language-Team: Russian <https://kodi.weblate.cloud/projects/kodi-add-ons-look-and-feel/visualization-waveform/ru_ru/>\n"
 "Language: ru_ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.11.2\n"
+"X-Generator: Weblate 5.13\n"
 
 msgctxt "Addon Summary"
 msgid "Visualisation showing 2 Waveform Graphs on the screen"
@@ -28,15 +28,15 @@ msgstr "В этой визуализации отображаются 2 граф
 # settings labels
 msgctxt "#30000"
 msgid "Points per line"
-msgstr ""
+msgstr "Очки за линию"
 
 msgctxt "#30001"
 msgid "Positions to represent the current frequency in a line."
-msgstr ""
+msgstr "Позиции для представления текущей частоты в строке."
 
 msgctxt "#30002"
 msgid "Line color"
-msgstr ""
+msgstr "Цвет линии"
 
 msgctxt "#30003"
 msgid "Red"
@@ -44,7 +44,7 @@ msgstr "Красный"
 
 msgctxt "#30004"
 msgid "Strength of red color in the line."
-msgstr ""
+msgstr "Сила красного цвета в линии."
 
 msgctxt "#30005"
 msgid "Green"
@@ -52,7 +52,7 @@ msgstr "Зелёный"
 
 msgctxt "#30006"
 msgid "Strength of green color in the line."
-msgstr ""
+msgstr "Сила зелёного цвета в линии."
 
 msgctxt "#30007"
 msgid "Blue"
@@ -60,19 +60,19 @@ msgstr "Синий"
 
 msgctxt "#30008"
 msgid "Strength of blue color in the line."
-msgstr ""
+msgstr "Сила синего цвета в линии."
 
 msgctxt "#30009"
 msgid "Alpha"
-msgstr ""
+msgstr "Альфа"
 
 msgctxt "#30010"
 msgid "Strength of alpha in the line."
-msgstr ""
+msgstr "Сила альфы в линии."
 
 msgctxt "#30011"
 msgid "Background color"
-msgstr ""
+msgstr "Цвет фона"
 
 msgctxt "#30012"
 msgid "Red"
@@ -80,7 +80,7 @@ msgstr "Красный"
 
 msgctxt "#30013"
 msgid "Strength of red color in the background."
-msgstr ""
+msgstr "Сила красного цвета в фоне."
 
 msgctxt "#30014"
 msgid "Green"
@@ -88,7 +88,7 @@ msgstr "Зелёный"
 
 msgctxt "#30015"
 msgid "Strength of green color in the background."
-msgstr ""
+msgstr "Сила зелёного цвета в фоне."
 
 msgctxt "#30016"
 msgid "Blue"
@@ -96,28 +96,28 @@ msgstr "Синий"
 
 msgctxt "#30017"
 msgid "Strength of blue color in the background."
-msgstr ""
+msgstr "Сила синего цвета в фоне."
 
 msgctxt "#30018"
 msgid "Alpha"
-msgstr ""
+msgstr "Альфа"
 
 msgctxt "#30019"
 msgid "Strength of alpha in the background."
-msgstr ""
+msgstr "сила альфы в фоне."
 
 msgctxt "#30020"
 msgid "Don't calculate"
-msgstr ""
+msgstr "Не рассчитывать"
 
 msgctxt "#30021"
 msgid "Line thickness"
-msgstr ""
+msgstr "Толщина линии"
 
 msgctxt "#30022"
 msgid "To define the thickness of a line with a number of pixels."
-msgstr ""
+msgstr "Определить толщину линии с помощью количества пикселей."
 
 msgctxt "#30023"
 msgid "{0:d} px"
-msgstr ""
+msgstr "{0:d} пикс"
