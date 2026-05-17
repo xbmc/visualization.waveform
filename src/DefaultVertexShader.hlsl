@@ -22,10 +22,10 @@ cbuffer cbViewPort : register(b0)
 VS_OUT main(float4 pos : POSITION, float4 col : COLOR)
 {
   VS_OUT r = (VS_OUT)0;
-  r.pos.x  =  (pos.x / (g_viewPortWidth / 2.0)) - 1;
-  r.pos.y  = -(pos.y / (g_viewPortHeigh / 2.0)) + 1;
-  r.pos.z  = pos.z;
-  r.pos.w  = 1.0;
-  r.col    = col;
+  r.pos.x = (pos.x / (g_viewPortWidth / 2.0)) - 1;
+  r.pos.y = -(pos.y / (g_viewPortHeigh / 2.0)) + 1;
+  r.pos.z = pos.z;
+  r.pos.w = 1.0;
+  r.col = col;
   return r;
 }

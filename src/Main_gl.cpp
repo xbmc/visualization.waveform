@@ -16,15 +16,13 @@
  *  Ported to GLES by gimli
  */
 
-#include <string.h>
-#include <math.h>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <kodi/addon-instance/Visualization.h>
 #include <kodi/gui/gl/GL.h>
 #include <kodi/gui/gl/Shader.h>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include <math.h>
+#include <string.h>
 
 #define NUM_BANDS 16
 
@@ -32,16 +30,18 @@
 #define M_PI 3.141592654f
 #endif
 
-class ATTR_DLL_LOCAL CVisualizationWaveForm
-  : public kodi::addon::CAddonBase,
-    public kodi::addon::CInstanceVisualization,
-    public kodi::gui::gl::CShaderProgram
+class ATTR_DLL_LOCAL CVisualizationWaveForm : public kodi::addon::CAddonBase,
+                                              public kodi::addon::CInstanceVisualization,
+                                              public kodi::gui::gl::CShaderProgram
 {
 public:
   CVisualizationWaveForm() = default;
   ~CVisualizationWaveForm() override = default;
 
-  bool Start(int channels, int samplesPerSec, int bitsPerSample, const std::string& songName) override;
+  bool Start(int channels,
+             int samplesPerSec,
+             int bitsPerSample,
+             const std::string& songName) override;
   void Stop() override;
   void Render() override;
   bool IsDirty() override { return true; }
@@ -79,15 +79,20 @@ private:
 //-- Start -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerSample, const std::string& songName)
+bool CVisualizationWaveForm::Start(int channels,
+                                   int samplesPerSec,
+                                   int bitsPerSample,
+                                   const std::string& songName)
 {
   (void)channels;
   (void)samplesPerSec;
   (void)bitsPerSample;
   (void)songName;
 
-  std::string fraqShader = kodi::addon::GetAddonPath("resources/shaders/" GL_TYPE_STRING "/frag.glsl");
-  std::string vertShader = kodi::addon::GetAddonPath("resources/shaders/" GL_TYPE_STRING "/vert.glsl");
+  std::string fraqShader =
+      kodi::addon::GetAddonPath("resources/shaders/" GL_TYPE_STRING "/frag.glsl");
+  std::string vertShader =
+      kodi::addon::GetAddonPath("resources/shaders/" GL_TYPE_STRING "/vert.glsl");
   if (!LoadShaderFiles(vertShader, fraqShader) || !CompileAndLink())
   {
     kodi::Log(ADDON_LOG_ERROR, "Failed to create or compile shader");
@@ -108,7 +113,8 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
   }
 
   kodi::addon::CheckSettingInt("line-thickness", m_lineThickness);
-  m_lineThicknessFactor = 1.0f / static_cast<float>(Height()) * static_cast<float>(m_lineThickness) / 2.0f;
+  m_lineThicknessFactor =
+      1.0f / static_cast<float>(Height()) * static_cast<float>(m_lineThickness) / 2.0f;
   if (m_lineThickness == 1)
   {
     glLineWidth(1.0f); // Force set to 1.0
@@ -116,7 +122,7 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
   }
   else
   {
-    m_position.resize(1024*6);
+    m_position.resize(1024 * 6);
   }
 
   kodi::addon::CheckSettingFloat("line-red", m_lineColor.r);
@@ -135,7 +141,7 @@ bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerS
   glGenBuffers(1, &m_vertexVBO);
 #endif
 
-  m_modelProjMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f ,0.0f ,-1.0f));
+  m_modelProjMat = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
   m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(1.0f, 0.0f, 0.0f));
   m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 1.0f, 0.0f));
   m_modelProjMat = glm::rotate(m_modelProjMat, 0.0f, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -169,7 +175,8 @@ void CVisualizationWaveForm::Render()
 #ifdef HAS_GL
   glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
 
-  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), BUFFER_OFFSET(offsetof(glm::vec3, x)));
+  glVertexAttribPointer(m_aPosition, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
+                        BUFFER_OFFSET(offsetof(glm::vec3, x)));
   glEnableVertexAttribArray(m_aPosition);
 
   glEnable(GL_LINE_SMOOTH);
@@ -180,7 +187,8 @@ void CVisualizationWaveForm::Render()
 
   if (m_backgroundColor.a != 0.0f)
   {
-    glClearColor(m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b, m_backgroundColor.a);
+    glClearColor(m_backgroundColor.r, m_backgroundColor.g, m_backgroundColor.b,
+                 m_backgroundColor.a);
     glClear(GL_COLOR_BUFFER_BIT);
   }
 
@@ -213,10 +221,12 @@ void CVisualizationWaveForm::DrawLine(float* waveform, bool topBottom)
 
   if (m_lineThickness > 1)
   {
-    for (int i = 0; i < m_usedLinePoints-1; i++)
+    for (int i = 0; i < m_usedLinePoints - 1; i++)
     {
-      glm::vec2 A = glm::vec2(-1.0f + ((i     / float(m_usedLinePoints-1)) * 2.0f), posYOffset + waveform[i]   * 0.9f);
-      glm::vec2 B = glm::vec2(-1.0f + (((i+1) / float(m_usedLinePoints-1)) * 2.0f), posYOffset + waveform[i+1] * 0.9f);
+      glm::vec2 A = glm::vec2(-1.0f + ((i / float(m_usedLinePoints - 1)) * 2.0f),
+                              posYOffset + waveform[i] * 0.9f);
+      glm::vec2 B = glm::vec2(-1.0f + (((i + 1) / float(m_usedLinePoints - 1)) * 2.0f),
+                              posYOffset + waveform[i + 1] * 0.9f);
 
       glm::vec2 p(B.x - A.x, B.y - A.y);
       p = glm::normalize(p);
@@ -236,14 +246,16 @@ void CVisualizationWaveForm::DrawLine(float* waveform, bool topBottom)
   {
     for (int i = 0; i < m_usedLinePoints; i++)
     {
-      m_position[ptr++] = glm::vec3(-1.0f + ((i / float(m_usedLinePoints)) * 2.0f), posYOffset + waveform[i] * 0.9f, 1.0f);
+      m_position[ptr++] = glm::vec3(-1.0f + ((i / float(m_usedLinePoints)) * 2.0f),
+                                    posYOffset + waveform[i] * 0.9f, 1.0f);
     }
 
     mode = GL_LINE_STRIP;
   }
 
 #ifdef HAS_GL
-  glBufferData(GL_ARRAY_BUFFER, m_position.size()*sizeof(glm::vec3), m_position.data(), GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, m_position.size() * sizeof(glm::vec3), m_position.data(),
+               GL_STATIC_DRAW);
 #endif
 
   glDrawArrays(mode, 0, ptr);
@@ -264,13 +276,13 @@ void CVisualizationWaveForm::AudioData(const float* pAudioData, size_t iAudioDat
   }
   while (ipos < m_usedLinePoints)
   {
-    for (size_t i=0; i < iAudioDataLength; i+=usedStep)
+    for (size_t i = 0; i < iAudioDataLength; i += usedStep)
     {
-      m_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
-      m_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
+      m_fWaveform[0][ipos] = pAudioData[i]; // left channel
+      m_fWaveform[1][ipos] = pAudioData[i + 1]; // right channel
       ipos++;
       if (ipos >= m_usedLinePoints)
-         break;
+        break;
     }
   }
 }

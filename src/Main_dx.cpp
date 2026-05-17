@@ -8,15 +8,13 @@
 // Waveform.vis
 // A simple visualisation example by MrC
 
-#include <kodi/addon-instance/Visualization.h>
-#include <stdio.h>
-#include <d3d11_1.h>
 #include <DirectXMath.h>
 #include <DirectXPackedVector.h>
-#include <stdio.h>
-
+#include <d3d11_1.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <kodi/addon-instance/Visualization.h>
+#include <stdio.h>
 
 using namespace DirectX;
 using namespace DirectX::PackedVector;
@@ -24,9 +22,9 @@ using namespace DirectX::PackedVector;
 // Include the precompiled shader code.
 namespace
 {
-  #include "DefaultPixelShader.inc"
-  #include "DefaultVertexShader.inc"
-}
+#include "DefaultPixelShader.inc"
+#include "DefaultVertexShader.inc"
+} // namespace
 
 struct cbViewPort
 {
@@ -41,16 +39,18 @@ struct Vertex_t
   XMFLOAT4 col;
 };
 
-class CVisualizationWaveForm
-  : public kodi::addon::CAddonBase,
-    public kodi::addon::CInstanceVisualization
+class CVisualizationWaveForm : public kodi::addon::CAddonBase,
+                               public kodi::addon::CInstanceVisualization
 {
 public:
   CVisualizationWaveForm() = default;
   ~CVisualizationWaveForm() override;
 
   ADDON_STATUS Create() override;
-  bool Start(int channels, int samplesPerSec, int bitsPerSample, const std::string& songName) override;
+  bool Start(int channels,
+             int samplesPerSec,
+             int bitsPerSample,
+             const std::string& songName) override;
   void Render() override;
   void AudioData(const float* audioData, size_t audioDataLength) override;
 
@@ -118,7 +118,10 @@ ADDON_STATUS CVisualizationWaveForm::Create()
 //-- Start -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-bool CVisualizationWaveForm::Start(int channels, int samplesPerSec, int bitsPerSample, const std::string& songName)
+bool CVisualizationWaveForm::Start(int channels,
+                                   int samplesPerSec,
+                                   int bitsPerSample,
+                                   const std::string& songName)
 {
   (void)channels;
   (void)samplesPerSec;
@@ -173,13 +176,13 @@ void CVisualizationWaveForm::AudioData(const float* pAudioData, size_t iAudioDat
 
   while (ipos < m_usedLinePoints)
   {
-    for (size_t i=0; i < length; i+=usedStep)
+    for (size_t i = 0; i < length; i += usedStep)
     {
-      m_fWaveform[0][ipos] = pAudioData[i  ]; // left channel
-      m_fWaveform[1][ipos] = pAudioData[i+1]; // right channel
+      m_fWaveform[0][ipos] = pAudioData[i]; // left channel
+      m_fWaveform[1][ipos] = pAudioData[i + 1]; // right channel
       ipos++;
       if (ipos >= m_usedLinePoints)
-         break;
+        break;
     }
   }
 }
@@ -237,8 +240,10 @@ void CVisualizationWaveForm::Render()
   for (int i = 0; i < m_usedLinePoints; i++)
   {
     m_verts[j].col = XMFLOAT4(glm::value_ptr(m_lineColor));
-    m_verts[j].x = m_viewport.TopLeftX + (-1.0f + ((i / float(m_usedLinePoints)) * 2.0f) * m_viewport.Width);
-    m_verts[j].y = m_viewport.TopLeftY + m_viewport.Height * 0.25f + (m_fWaveform[0][i] * m_viewport.Height * 0.3f);
+    m_verts[j].x =
+        m_viewport.TopLeftX + (-1.0f + ((i / float(m_usedLinePoints)) * 2.0f) * m_viewport.Width);
+    m_verts[j].y = m_viewport.TopLeftY + m_viewport.Height * 0.25f +
+                   (m_fWaveform[0][i] * m_viewport.Height * 0.3f);
     m_verts[j].z = 1.0;
     j++;
   }
@@ -247,8 +252,10 @@ void CVisualizationWaveForm::Render()
   for (int i = 0; i < m_usedLinePoints; i++)
   {
     m_verts[j].col = XMFLOAT4(glm::value_ptr(m_lineColor));
-    m_verts[j].x = m_viewport.TopLeftX + (-1.0f + ((i / float(m_usedLinePoints)) * 2.0f) * m_viewport.Width);
-    m_verts[j].y = m_viewport.TopLeftY + m_viewport.Height * 0.75f + (m_fWaveform[1][i] * m_viewport.Height * 0.3f);
+    m_verts[j].x =
+        m_viewport.TopLeftX + (-1.0f + ((i / float(m_usedLinePoints)) * 2.0f) * m_viewport.Width);
+    m_verts[j].y = m_viewport.TopLeftY + m_viewport.Height * 0.75f +
+                   (m_fWaveform[1][i] * m_viewport.Height * 0.3f);
     m_verts[j].z = 1.0;
     j++;
   }
@@ -268,24 +275,27 @@ void CVisualizationWaveForm::Render()
 bool CVisualizationWaveForm::init_renderer_objs()
 {
   // Create vertex shader
-  if (S_OK != m_device->CreateVertexShader(DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode), nullptr, &m_vShader))
+  if (S_OK != m_device->CreateVertexShader(DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode),
+                                           nullptr, &m_vShader))
     return false;
 
   // Create input layout
-  D3D11_INPUT_ELEMENT_DESC layout[] =
-  {
-    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-    { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+  D3D11_INPUT_ELEMENT_DESC layout[] = {
+      {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+      {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0},
   };
-  if (S_OK != m_device->CreateInputLayout(layout, ARRAYSIZE(layout), DefaultVertexShaderCode, sizeof(DefaultVertexShaderCode), &m_inputLayout))
+  if (S_OK != m_device->CreateInputLayout(layout, ARRAYSIZE(layout), DefaultVertexShaderCode,
+                                          sizeof(DefaultVertexShaderCode), &m_inputLayout))
     return false;
 
   // Create pixel shader
-  if (S_OK != m_device->CreatePixelShader(DefaultPixelShaderCode, sizeof(DefaultPixelShaderCode), nullptr, &m_pShader))
+  if (S_OK != m_device->CreatePixelShader(DefaultPixelShaderCode, sizeof(DefaultPixelShaderCode),
+                                          nullptr, &m_pShader))
     return false;
 
   // create buffers
-  CD3D11_BUFFER_DESC desc(sizeof(Vertex_t) * 1024 * 2, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
+  CD3D11_BUFFER_DESC desc(sizeof(Vertex_t) * 1024 * 2, D3D11_BIND_VERTEX_BUFFER,
+                          D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
   if (S_OK != m_device->CreateBuffer(&desc, NULL, &m_vBuffer))
     return false;
 
@@ -294,7 +304,7 @@ bool CVisualizationWaveForm::init_renderer_objs()
   desc.Usage = D3D11_USAGE_DEFAULT;
   desc.CPUAccessFlags = 0;
 
-  cbViewPort viewPort = { (float)m_viewport.Width, (float)m_viewport.Height, 0.0f, 0.0f };
+  cbViewPort viewPort = {(float)m_viewport.Width, (float)m_viewport.Height, 0.0f, 0.0f};
   D3D11_SUBRESOURCE_DATA initData;
   initData.pSysMem = &viewPort;
 
