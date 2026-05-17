@@ -46,11 +46,7 @@ public:
   CVisualizationWaveForm() = default;
   ~CVisualizationWaveForm() override;
 
-  ADDON_STATUS Create() override;
-  bool Start(int channels,
-             int samplesPerSec,
-             int bitsPerSample,
-             const std::string& songName) override;
+  bool Init() override;
   void Render() override;
   void AudioData(const float* audioData, size_t audioDataLength) override;
 
@@ -96,10 +92,10 @@ CVisualizationWaveForm::~CVisualizationWaveForm()
     m_device->Release();
 }
 
-//-- Create -------------------------------------------------------------------
+//-- Init -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-ADDON_STATUS CVisualizationWaveForm::Create()
+bool CVisualizationWaveForm::Init()
 {
   m_viewport.TopLeftX = static_cast<float>(X());
   m_viewport.TopLeftY = static_cast<float>(Y());
@@ -110,23 +106,7 @@ ADDON_STATUS CVisualizationWaveForm::Create()
   m_context = (ID3D11DeviceContext*)Device();
   m_context->GetDevice(&m_device);
   if (!init_renderer_objs())
-    return ADDON_STATUS_PERMANENT_FAILURE;
-
-  return ADDON_STATUS_OK;
-}
-
-//-- Start -------------------------------------------------------------------
-// Called on load. Addon should fully initalize or return error status
-//-----------------------------------------------------------------------------
-bool CVisualizationWaveForm::Start(int channels,
-                                   int samplesPerSec,
-                                   int bitsPerSample,
-                                   const std::string& songName)
-{
-  (void)channels;
-  (void)samplesPerSec;
-  (void)bitsPerSample;
-  (void)songName;
+    return false;
 
   kodi::addon::CheckSettingInt("points-per-line", m_usedLinePoints);
 

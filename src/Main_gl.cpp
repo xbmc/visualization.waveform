@@ -38,11 +38,8 @@ public:
   CVisualizationWaveForm() = default;
   ~CVisualizationWaveForm() override = default;
 
-  bool Start(int channels,
-             int samplesPerSec,
-             int bitsPerSample,
-             const std::string& songName) override;
-  void Stop() override;
+  bool Init() override;
+  void DeInit() override;
   void Render() override;
   bool IsDirty() override { return true; }
   void AudioData(const float* audioData, size_t audioDataLength) override;
@@ -79,16 +76,8 @@ private:
 //-- Start -------------------------------------------------------------------
 // Called on load. Addon should fully initalize or return error status
 //-----------------------------------------------------------------------------
-bool CVisualizationWaveForm::Start(int channels,
-                                   int samplesPerSec,
-                                   int bitsPerSample,
-                                   const std::string& songName)
+bool CVisualizationWaveForm::Init()
 {
-  (void)channels;
-  (void)samplesPerSec;
-  (void)bitsPerSample;
-  (void)songName;
-
   std::string fraqShader =
       kodi::addon::GetAddonPath("resources/shaders/" GL_TYPE_STRING "/frag.glsl");
   std::string vertShader =
@@ -150,7 +139,7 @@ bool CVisualizationWaveForm::Start(int channels,
   return true;
 }
 
-void CVisualizationWaveForm::Stop()
+void CVisualizationWaveForm::DeInit()
 {
   if (!m_startOK)
     return;
