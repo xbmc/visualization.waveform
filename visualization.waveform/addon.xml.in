@@ -25,7 +25,7 @@
     <summary lang="bg_BG">Визуализация представяща две осцилиращи вълни</summary>
     <summary lang="bs_BA">Vizualizacija koja prikazuje 2 grafikona talasnih oblika na ekranu</summary>
     <summary lang="ca_ES">Visualització que mostra 2 gràfics en forma d&apos;ona a la pantalla</summary>
-    <summary lang="cs_CZ">Vizualizace zobrazující 2 grafy průběhu vlny na obrazovce</summary>
+    <summary lang="cs_CZ">Vizualizace zobrazující na obrazovce dva grafy průběhu signálu</summary>
     <summary lang="cy_GB">Delweddu&apos;n dangos 2 Graff Ffurf Ton ar y sgrin</summary>
     <summary lang="da_DK">Visualisering der viser 2 bølgeagtige grafer på skærmen</summary>
     <summary lang="de_DE">Eine Visualisierung, die zwei wellenförmige Grafiken auf dem Bildschirm zeigt</summary>
@@ -80,7 +80,7 @@
     <description lang="bg_BG">Waveform представя графика на две осцилиращи вълни на екрана, по една за всеки канал (ляв и десен), който реагират на ритъма на музиката.</description>
     <description lang="bs_BA">Talasni oblik je jednostavna vizualizacija koja na ekranu prikazuje 2 grafikona talasnog oblika, po jedan za lijevi i desni kanal, koji se kreću u ritmu muzike</description>
     <description lang="ca_ES">Waveform és una visualització molt simple que mostra 2 gràfics en forma d&apos;ona a la pantalla, un per a cada un dels canals Esquerre i Dret que es mouen al ritme de la música</description>
-    <description lang="cs_CZ">Průběh vlny je jednoduchá vizualizace zobrazující 2 grafy průběhu vlny na obrazovce, které znázorňují levý a pravý kanál a pohybují se v rytmu hudby</description>
+    <description lang="cs_CZ">Waveform je jednoduchá vizualizace zobrazující na obrazovce dva grafy průběhu signálu, jeden pro levý a jeden pro pravý kanál, které se pohybují v rytmu hudby.</description>
     <description lang="cy_GB">Delweddu syml yw Waveform sy&apos;n dangos 2 Graff Ffurf Ton ar y sgrin. Un yr un ar gyfer y sianel de a chwith sy&apos;n symud i guriad y gerddoriaeth</description>
     <description lang="da_DK">Waveform er en simpel visualisering, der viser 2 bølgeagtige grafer på skærmen. Én til den venstre og én til den højre kanal, der bevæger sig til musikkens rytme.</description>
     <description lang="de_DE">Waveform ist eine einfache Visualisierung, die zwei wellenförmige Grafiken zeigt. Je eine Grafik für den linken und rechten Kanal, die sich im Takt der Musik bewegen</description>
